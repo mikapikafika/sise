@@ -7,18 +7,18 @@ public class Board {
     public int zeroIndex;
     public int rows;
     public int cols;
-    public char operator;
+    public char lastMove;
     public Board parentBoard;
     public int recDepth = 0;
     public String path = "";
     public int priority;
 
-    public Board(int[] fields, int zeroIndex, int rows, int cols, char operator, Board parentBoard, int recDepth, String path) {
+    public Board(int[] fields, int zeroIndex, int rows, int cols, char lastmove, Board parentBoard, int recDepth, String path) {
         this.fields = fields;
         this.zeroIndex = zeroIndex;
         this.rows = rows;
         this.cols = cols;
-        this.operator = operator;
+        this.lastMove = lastmove;
         this.parentBoard = parentBoard;
         this.recDepth = recDepth;
         this.path = path;
@@ -51,7 +51,7 @@ public class Board {
         this.cols = cols;
     }
 
-    public Board readBoard(String baseFile) throws Exception{
+    public Board readBoard(String baseFile) {
         File file = new File(baseFile);
         try{
             Scanner scan = new Scanner(file);
@@ -98,22 +98,22 @@ public class Board {
         int newZeroIndex = zeroIndex;
         switch(whichWay){
             case 'R':
-                if(zeroIndex % cols == cols - 1)
+                if(lastMove == 'L' || zeroIndex % cols == cols - 1 )
                     break;
                 newZeroIndex = zeroIndex + 1;
                 break;
             case 'L':
-                if (zeroIndex % cols == 0)
+                if (lastMove == 'R' || zeroIndex % cols == 0)
                     break;
                 newZeroIndex = zeroIndex - 1;
                 break;
             case 'U':
-                if (zeroIndex < cols )
+                if (lastMove == 'D' ||zeroIndex < cols )
                     break;
                 newZeroIndex = zeroIndex - cols;
                 break;
             case 'D':
-                if (zeroIndex >= (rows - 1) * cols)
+                if (lastMove == 'U' || zeroIndex >= (rows - 1) * cols)
                     break;
                 newZeroIndex = zeroIndex + cols;
         }
