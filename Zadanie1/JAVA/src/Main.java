@@ -17,7 +17,7 @@ public class Main {
                 solver = new BFS(args[1], board);
                 break;
             case "dfs":
-                System.out.println("dfs");
+                solver = new DFS(args[1], board);
                 break;
             case "astr":
                 System.out.println("astr");
