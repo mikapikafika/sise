@@ -35,7 +35,7 @@ public class DFS extends GameSolver {
                                     && v.recDepth < visitedList.get(v).recDepth)) {
                     visitedList.remove(v);
                     visitedList.put(v, v);
-                    List<Board> neighbours = neighbours(v);
+                    List<Board> neighbours = this.neighbours(v);
                     for (int i = neighbours.size() - 1; i >= 0; i--) {
                         if (maxDepth < neighbours.get(i).recDepth) {
                             maxDepth = neighbours.get(i).recDepth;

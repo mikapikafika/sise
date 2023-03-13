@@ -20,11 +20,18 @@ public class Main {
                 solver = new DFS(args[1], board);
                 break;
             case "astr":
-                System.out.println("astr");
+                solver = new Astr(args[1], board);
                 break;
+            default:
+                System.err.println("Unsupported solver: " + args[0]);
+                System.exit(2);
         }
         String[] generatedSolution = solver.solveTheGame();
-        writeToFiles(args[3], args[4], generatedSolution);
+        try {
+            writeToFiles(args[3], args[4], generatedSolution);
+        } catch (Exception e) {
+            System.exit(3);
+        }
     }
 
     public static void writeToFiles(String endFileName, String extraFileName, String[] text){
