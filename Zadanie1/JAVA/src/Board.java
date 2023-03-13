@@ -31,6 +31,22 @@ public class Board {
         this.fields = fields;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public int getRecDepth() {
+        return recDepth;
+    }
+
+    public void setRecDepth(int recDepth) {
+        this.recDepth = recDepth;
+    }
+
     public String getFields() {
         String string ="";
         for (int i = 0; i < fields.length; i++) {
@@ -122,5 +138,12 @@ public class Board {
         newFields[newZeroIndex] = 0;
         Board newBoard = new Board(newFields, newZeroIndex, rows, cols, whichWay, this, recDepth++, path + whichWay );
         return newBoard;
+//        int temp = fields[zeroIndex];
+//        fields[zeroIndex] = fields[newZeroIndex];
+//        fields[newZeroIndex] = temp;
+//        zeroIndex = newZeroIndex;
+//        lastMove = whichWay;
+//        path += whichWay;
+//        recDepth++;
     }
 }
