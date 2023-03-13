@@ -22,7 +22,7 @@ public class DFS extends GameSolver {
             result[3] = "0";
             result[4] = String.format("%.3f", elapsedTime);
         }
-        int maxDepth = 0;
+        int maxDepth = 30;
         Deque<Board> stack = new ArrayDeque<>();
         HashMap<Board, Board> visitedList = new HashMap<>();
         stack.push(solved);
