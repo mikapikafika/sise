@@ -25,7 +25,7 @@ public class Astr extends GameSolver {
             result[4] = String.format("%.3f", elapsedTime);
         }
         PriorityQueue<Board> queue = new PriorityQueue<Board>(new ComparatorBoards());
-        HashMap<Board, Board> visitedList = new HashMap<>();
+        HashMap<Board, Board> processedList = new HashMap<>();
         queue.add(solved);
         int visited = 0;
 
@@ -38,15 +38,15 @@ public class Astr extends GameSolver {
                 float elapsedTime = (System.nanoTime() - startTime) / 1000000f;
                 result[0] = v.path;
                 result[1] = String.valueOf(visited);
-                result[2] = String.valueOf(visitedList.size());
+                result[2] = String.valueOf(processedList.size());
                 result[3] = String.valueOf(v.recDepth);
                 result[4] = String.format("%.3f", elapsedTime);
                 return result;
             }
-            visitedList.put(v, v);
+            processedList.put(v, v);
             List<Board> neighbours = this.neighbours(v);
             for (int i = 0; i < neighbours.size(); i++) {
-                if (!visitedList.containsKey(neighbours.get(i))) {
+                if (!processedList.containsKey(neighbours.get(i))) {
                     int f = neighbours.get(i).recDepth + heuristicValue(neighbours.get(i));
                     if (!queue.contains(neighbours.get(i))) {
                         neighbours.get(i).priority = f;
@@ -63,18 +63,21 @@ public class Astr extends GameSolver {
         float elapsedTime = (System.nanoTime() - startTime) / 1000000f;
         result[0] = "-1";
         result[1] = String.valueOf(visited);
-        result[2] = String.valueOf(visitedList.size());
+        result[2] = String.valueOf(processedList.size());
         result[4] = String.format("%.3f", elapsedTime);
         return result;
     }
 
+
     @Override
     public List<Board> neighbours(Board board) {
         List<Board> neighbours = new ArrayList<>();
-        for(int i = 0; i < 4; i++)
-        {
+        for(int i = 0; i < 4; i++) {
             Board newNeighbour = board.makeAMove("RDUL".charAt(i));
             if(newNeighbour != null){
+                // Modify the existing board object instead of creating a new one
+                newNeighbour.setPath(board.getPath() + "RDUL".charAt(i));
+                newNeighbour.setRecDepth(board.getRecDepth() + 1);
                 neighbours.add(newNeighbour);
             }
         }

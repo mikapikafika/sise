@@ -35,7 +35,7 @@ public class Main {
     }
 
     public static void writeToFiles(String endFileName, String extraFileName, String[] text){
-        try{
+        try {
             FileWriter writer = new FileWriter(endFileName);
             //If solution was found
             if(!(text[0].equals("-1")))
