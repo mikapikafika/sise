@@ -69,10 +69,11 @@ public class Board {
 
     public Board readBoard(String baseFile) {
         File file = new File(baseFile);
-        try{
+        try {
             Scanner scan = new Scanner(file);
             String line = scan.nextLine();
             String[] tmp = line.split(" ");
+            // Setting the number of rows and cols given in the 1st line
             rows = Integer.parseInt(tmp[0]);
             cols = Integer.parseInt(tmp[1]);
             fields = new int[rows * cols];
@@ -81,8 +82,8 @@ public class Board {
                 tmp = line.split(" ");
                 for (int j = 0; j < cols; j++) {
                     fields[i * cols + j] = Integer.parseInt(tmp[j]);
-                    if(Integer.parseInt(tmp[j]) == 0)
-                    {
+                    // If it's 0, sets its index
+                    if (Integer.parseInt(tmp[j]) == 0) {
                         zeroIndex = i * cols + j;
                     }
                 }
@@ -101,9 +102,10 @@ public class Board {
     }
 
     public boolean isSolved() {
+        // Iterates through everything aside from 0
         for (int i = 0; i < fields.length - 1; i++) {
-            if(fields[i] != i + 1)
-            {
+            // Compares value of fields[i] with the expected value
+            if (fields[i] != i + 1) {
                 return false;
             }
         }
@@ -112,38 +114,38 @@ public class Board {
 
     public Board makeAMove(char whichWay){
         int newZeroIndex = zeroIndex;
-        switch(whichWay){
-            case 'R':
-                if(lastMove == 'L' || zeroIndex % cols == cols - 1 )
+        switch (whichWay) {
+            case 'R' -> {
+                if (lastMove == 'L' || zeroIndex % cols == cols - 1)
                     break;
                 newZeroIndex = zeroIndex + 1;
-                break;
-            case 'L':
+            }
+            case 'L' -> {
                 if (lastMove == 'R' || zeroIndex % cols == 0)
                     break;
                 newZeroIndex = zeroIndex - 1;
-                break;
-            case 'U':
-                if (lastMove == 'D' ||zeroIndex < cols )
+            }
+            case 'U' -> {
+                if (lastMove == 'D' || zeroIndex < cols)
                     break;
                 newZeroIndex = zeroIndex - cols;
-                break;
-            case 'D':
+            }
+            case 'D' -> {
                 if (lastMove == 'U' || zeroIndex >= (rows - 1) * cols)
                     break;
                 newZeroIndex = zeroIndex + cols;
+            }
         }
+        // Moving a tile
         int[] newFields = fields.clone();
         newFields[zeroIndex] = newFields[newZeroIndex];
         newFields[newZeroIndex] = 0;
-        Board newBoard = new Board(newFields, newZeroIndex, rows, cols, whichWay, this, recDepth++, path + whichWay );
-        return newBoard;
-//        int temp = fields[zeroIndex];
-//        fields[zeroIndex] = fields[newZeroIndex];
-//        fields[newZeroIndex] = temp;
-//        zeroIndex = newZeroIndex;
-//        lastMove = whichWay;
-//        path += whichWay;
-//        recDepth++;
+        return new Board(newFields, newZeroIndex, rows, cols, whichWay, this, recDepth++, path + whichWay );
     }
 }
+
+
+
+
+
+
