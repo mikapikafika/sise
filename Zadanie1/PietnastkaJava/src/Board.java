@@ -136,7 +136,7 @@ public class Board {
         int[] newFields = fields.clone();
         newFields[zeroIndex] = newFields[newZeroIndex];
         newFields[newZeroIndex] = 0;
-        Board newBoard = new Board(newFields, newZeroIndex, rows, cols, whichWay, this, recDepth++, path + whichWay );
+        Board newBoard = new Board(newFields, newZeroIndex, rows, cols, whichWay, this, recDepth+1, path + whichWay );
         return newBoard;
     }
 }

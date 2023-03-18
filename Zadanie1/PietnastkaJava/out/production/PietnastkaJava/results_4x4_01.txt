@@ -1,0 +1,252 @@
+Algorithm: ('astrSolved', 'hamm'), Board: 4x4_01_1
+Moves: 1
+Visited: 4
+Processed: 1
+Recursion depth: 1
+Time: 25,676 ms
+
+Algorithm: ('astrSolved', 'manh'), Board: 4x4_01_1
+Moves: 1
+Visited: 4
+Processed: 1
+Recursion depth: 1
+Time: 16,205 ms
+
+Algorithm: ('astrSolved', 'hamm'), Board: 4x4_01_2
+Moves: 1
+Visited: 4
+Processed: 1
+Recursion depth: 1
+Time: 15,542 ms
+
+Algorithm: ('astrSolved', 'manh'), Board: 4x4_01_2
+Moves: 1
+Visited: 8
+Processed: 2
+Recursion depth: 1
+Time: 15,706 ms
+
+Algorithm: ('dfsSolved', 'drlu'), Board: 4x4_01_1
+Moves: 1
+Visited: 3
+Processed: 1
+Recursion depth: 3
+Time: 8,309 ms
+
+Algorithm: ('dfsSolved', 'drul'), Board: 4x4_01_1
+Moves: 1
+Visited: 3
+Processed: 1
+Recursion depth: 3
+Time: 7,979 ms
+
+Algorithm: ('dfsSolved', 'ludr'), Board: 4x4_01_1
+Moves: 1
+Visited: 1
+Processed: 1
+Recursion depth: 3
+Time: 8,594 ms
+
+Algorithm: ('dfsSolved', 'lurd'), Board: 4x4_01_1
+Moves: 1
+Visited: 2
+Processed: 1
+Recursion depth: 3
+Time: 8,283 ms
+
+Algorithm: ('dfsSolved', 'rdlu'), Board: 4x4_01_1
+Moves: 1
+Visited: 4
+Processed: 1
+Recursion depth: 3
+Time: 8,434 ms
+
+Algorithm: ('dfsSolved', 'rdul'), Board: 4x4_01_1
+Moves: 1
+Visited: 4
+Processed: 1
+Recursion depth: 3
+Time: 8,554 ms
+
+Algorithm: ('dfsSolved', 'uldr'), Board: 4x4_01_1
+Moves: 1
+Visited: 1
+Processed: 1
+Recursion depth: 3
+Time: 8,689 ms
+
+Algorithm: ('dfsSolved', 'ulrd'), Board: 4x4_01_1
+Moves: 1
+Visited: 2
+Processed: 1
+Recursion depth: 3
+Time: 8,344 ms
+
+Algorithm: ('dfsSolved', 'drlu'), Board: 4x4_01_2
+Moves: 1
+Visited: 4
+Processed: 1
+Recursion depth: 3
+Time: 7,756 ms
+
+Algorithm: ('dfsSolved', 'drul'), Board: 4x4_01_2
+Moves: 1
+Visited: 4
+Processed: 1
+Recursion depth: 3
+Time: 8,238 ms
+
+Algorithm: ('dfsSolved', 'ludr'), Board: 4x4_01_2
+Moves: 1
+Visited: 2
+Processed: 1
+Recursion depth: 3
+Time: 7,536 ms
+
+Algorithm: ('dfsSolved', 'lurd'), Board: 4x4_01_2
+Moves: 1
+Visited: 1
+Processed: 1
+Recursion depth: 3
+Time: 8,348 ms
+
+Algorithm: ('dfsSolved', 'rdlu'), Board: 4x4_01_2
+Moves: 1
+Visited: 3
+Processed: 1
+Recursion depth: 3
+Time: 8,306 ms
+
+Algorithm: ('dfsSolved', 'rdul'), Board: 4x4_01_2
+Moves: 1
+Visited: 3
+Processed: 1
+Recursion depth: 3
+Time: 8,306 ms
+
+Algorithm: ('dfsSolved', 'uldr'), Board: 4x4_01_2
+Moves: 1
+Visited: 2
+Processed: 1
+Recursion depth: 3
+Time: 8,387 ms
+
+Algorithm: ('dfsSolved', 'ulrd'), Board: 4x4_01_2
+Moves: 1
+Visited: 1
+Processed: 1
+Recursion depth: 3
+Time: 8,675 ms
+
+Algorithm: ('bfsSolved', 'drlu'), Board: 4x4_01_1
+Moves: 1
+Visited: 3
+Processed: 1
+Recursion depth: 1
+Time: 8,232 ms
+
+Algorithm: ('bfsSolved', 'drul'), Board: 4x4_01_1
+Moves: 1
+Visited: 3
+Processed: 1
+Recursion depth: 1
+Time: 8,018 ms
+
+Algorithm: ('bfsSolved', 'ludr'), Board: 4x4_01_1
+Moves: 1
+Visited: 5
+Processed: 1
+Recursion depth: 3
+Time: 9,461 ms
+
+Algorithm: ('bfsSolved', 'lurd'), Board: 4x4_01_1
+Moves: 1
+Visited: 4
+Processed: 1
+Recursion depth: 2
+Time: 8,507 ms
+
+Algorithm: ('bfsSolved', 'rdlu'), Board: 4x4_01_1
+Moves: 1
+Visited: 2
+Processed: 1
+Recursion depth: 0
+Time: 8,163 ms
+
+Algorithm: ('bfsSolved', 'rdul'), Board: 4x4_01_1
+Moves: 1
+Visited: 2
+Processed: 1
+Recursion depth: 0
+Time: 8,044 ms
+
+Algorithm: ('bfsSolved', 'uldr'), Board: 4x4_01_1
+Moves: 1
+Visited: 5
+Processed: 1
+Recursion depth: 3
+Time: 7,739 ms
+
+Algorithm: ('bfsSolved', 'ulrd'), Board: 4x4_01_1
+Moves: 1
+Visited: 4
+Processed: 1
+Recursion depth: 2
+Time: 8,126 ms
+
+Algorithm: ('bfsSolved', 'drlu'), Board: 4x4_01_2
+Moves: 1
+Visited: 2
+Processed: 1
+Recursion depth: 0
+Time: 9,557 ms
+
+Algorithm: ('bfsSolved', 'drul'), Board: 4x4_01_2
+Moves: 1
+Visited: 2
+Processed: 1
+Recursion depth: 0
+Time: 7,815 ms
+
+Algorithm: ('bfsSolved', 'ludr'), Board: 4x4_01_2
+Moves: 1
+Visited: 4
+Processed: 1
+Recursion depth: 2
+Time: 8,122 ms
+
+Algorithm: ('bfsSolved', 'lurd'), Board: 4x4_01_2
+Moves: 1
+Visited: 5
+Processed: 1
+Recursion depth: 3
+Time: 8,769 ms
+
+Algorithm: ('bfsSolved', 'rdlu'), Board: 4x4_01_2
+Moves: 1
+Visited: 3
+Processed: 1
+Recursion depth: 1
+Time: 8,648 ms
+
+Algorithm: ('bfsSolved', 'rdul'), Board: 4x4_01_2
+Moves: 1
+Visited: 3
+Processed: 1
+Recursion depth: 1
+Time: 8,940 ms
+
+Algorithm: ('bfsSolved', 'uldr'), Board: 4x4_01_2
+Moves: 1
+Visited: 4
+Processed: 1
+Recursion depth: 2
+Time: 8,333 ms
+
+Algorithm: ('bfsSolved', 'ulrd'), Board: 4x4_01_2
+Moves: 1
+Visited: 5
+Processed: 1
+Recursion depth: 3
+Time: 8,263 ms
+
