@@ -110,33 +110,38 @@ public class Board {
         return true;
     }
 
-    public Board makeAMove(char whichWay){
+    public Board makeAMove(char whichWay, String moveOrder){
         int newZeroIndex = zeroIndex;
+        String newPath = path + whichWay;
+        if (newPath.contains(moveOrder))
+        {
+            return null;
+        }
         switch(whichWay){
             case 'R':
                 if(lastMove == 'L' || zeroIndex % cols == cols - 1 )
-                    break;
+                    return null;
                 newZeroIndex = zeroIndex + 1;
                 break;
             case 'L':
                 if (lastMove == 'R' || zeroIndex % cols == 0)
-                    break;
+                    return null;
                 newZeroIndex = zeroIndex - 1;
                 break;
             case 'U':
                 if (lastMove == 'D' ||zeroIndex < cols )
-                    break;
+                    return null;
                 newZeroIndex = zeroIndex - cols;
                 break;
             case 'D':
                 if (lastMove == 'U' || zeroIndex >= (rows - 1) * cols)
-                    break;
+                    return null;
                 newZeroIndex = zeroIndex + cols;
         }
         int[] newFields = fields.clone();
         newFields[zeroIndex] = newFields[newZeroIndex];
         newFields[newZeroIndex] = 0;
-        Board newBoard = new Board(newFields, newZeroIndex, rows, cols, whichWay, this, recDepth+1, path + whichWay );
+        Board newBoard = new Board(newFields, newZeroIndex, rows, cols, whichWay, this, recDepth+1, newPath);
         return newBoard;
     }
 }

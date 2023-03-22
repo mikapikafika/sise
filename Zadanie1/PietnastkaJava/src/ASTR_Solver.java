@@ -73,7 +73,7 @@ public class ASTR_Solver extends GameSolver {
         List<Board> neighbours = new ArrayList<>();
         for(int i = 0; i < 4; i++)
         {
-            Board newNeighbour = board.makeAMove("RDUL".charAt(i));
+            Board newNeighbour = board.makeAMove("RDUL".charAt(i), "RDUL");
             if(newNeighbour != null){
                 neighbours.add(newNeighbour);
             }

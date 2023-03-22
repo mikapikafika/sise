@@ -1,8 +1,0 @@
-java Main bfs RDUL Ukladanki\4x4_04_0024.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_rdul_sol.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_rdul_stats.txt
-java Main bfs RDLU Ukladanki\4x4_04_0024.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_rdlu_sol.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_rdlu_stats.txt
-java Main bfs DRUL Ukladanki\4x4_04_0024.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_drul_sol.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_drul_stats.txt
-java Main bfs DRLU Ukladanki\4x4_04_0024.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_drlu_sol.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_drlu_stats.txt
-java Main bfs LUDR Ukladanki\4x4_04_0024.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_ludr_sol.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_ludr_stats.txt
-java Main bfs LURD Ukladanki\4x4_04_0024.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_lurd_sol.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_lurd_stats.txt
-java Main bfs ULDR Ukladanki\4x4_04_0024.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_uldr_sol.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_uldr_stats.txt
-java Main bfs ULRD Ukladanki\4x4_04_0024.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_ulrd_sol.txt bfsSolved\4x4_04\24\4x4_04_0024_bfs_ulrd_stats.txt

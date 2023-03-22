@@ -23,6 +23,7 @@ public class DFS_Solver extends GameSolver {
             result[4] = String.format("%.3f", elapsedTime);
         }
         int maxDepth = 0;
+
         Deque<Board> stack = new ArrayDeque<>();
         HashMap<Board, Board> visitedList = new HashMap<>();
         stack.push(solved);
@@ -68,7 +69,7 @@ public class DFS_Solver extends GameSolver {
         List<Board> neighbours = new ArrayList<>();
         for(int i = 0; i < order.length(); i++)
         {
-            Board newNeighbour = board.makeAMove(order.charAt(i));
+            Board newNeighbour = board.makeAMove(order.charAt(i), order);
             if(newNeighbour != null){
                 neighbours.add(newNeighbour);
             }

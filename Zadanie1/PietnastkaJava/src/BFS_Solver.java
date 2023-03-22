@@ -65,7 +65,7 @@ public class BFS_Solver extends GameSolver{
         List<Board> neighbours = new ArrayList<>();
         for(int i = 0; i < order.length(); i++)
         {
-            Board newNeighbour = board.makeAMove(order.charAt(i));
+            Board newNeighbour = board.makeAMove(order.charAt(i), order);
             if(newNeighbour != null){
                 neighbours.add(newNeighbour);
             }
