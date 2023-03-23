@@ -6,25 +6,20 @@ public class Main {
 
         Board board = new Board();
         GameSolver solver = null;
-        try{
+        try {
             board.readBoard(args[2]);
         } catch (Exception e) {
             System.exit(1);
         }
 
-        switch(args[0]) {
-            case "bfs":
-                solver = new BFS_Solver(args[1], board);
-                break;
-            case "dfs":
-                solver = new DFS_Solver(args[1], board);
-                break;
-            case "astr":
-                solver = new ASTR_Solver(args[1], board);
-                break;
-            default:
+        switch (args[0]) {
+            case "bfs" -> solver = new BFS_Solver(args[1], board);
+            case "dfs" -> solver = new DFS_Solver(args[1], board);
+            case "astr" -> solver = new ASTR_Solver(args[1], board);
+            default -> {
                 System.err.println("Unsupported solver: " + args[0]);
                 System.exit(2);
+            }
         }
         String[] generatedSolution = solver.solveTheGame();
         try {
@@ -35,38 +30,33 @@ public class Main {
     }
 
     public static void writeToFiles(String endFileName, String extraFileName, String[] text){
-        try{
+        try {
             FileWriter writer = new FileWriter(endFileName);
             //If solution was found
-            if(!(text[0].equals("-1")))
-            {
-                //How many steps
+            if (!(text[0].equals("-1"))) {
+                // How many steps
                 writer.write(String.valueOf(text[0].length()));
                 writer.write("\n");
-                //Listed steps
+                // Listed steps
                 writer.write(text[0]);
             }
-            else
-            {
+            else {
                 writer.write("-1");
             }
             writer.close();
         } catch (IOException e) {
             System.out.println("Couldn't write to file" + endFileName);
         }
-        try{
+        try {
             FileWriter writer = new FileWriter(extraFileName);
-            //This if works exactly like in the end file but without listing steps
-            if(!(text[0].equals("-1")))
-            {
+            // This if works exactly like in the end file but without listing steps
+            if (!(text[0].equals("-1"))) {
                 writer.write(String.valueOf(text[0].length()));
-            }
-            else
-            {
+            } else {
                 writer.write("-1");
             }
             writer.write("\n");
-//            Here it writes visited, processed, recursion depth and time, each in another line
+            // Here it writes visited, processed, recursion depth and time, each in another line
             for (int i = 1; i < text.length; i++) {
                 writer.write(text[i]);
                 writer.write("\n");
