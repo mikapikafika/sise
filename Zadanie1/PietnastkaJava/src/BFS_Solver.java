@@ -24,7 +24,7 @@ public class BFS_Solver extends GameSolver{
             return result;
         }
         int numOfProcessed = 0;
-        Queue<Board> newList = new LinkedList<>();
+        Queue<Board> newList = new LinkedList<>();                  //This list is for not visited yet neighbours
         HashMap<Board, Board> visitedList = new HashMap<>();
         newList.add(solved);
         visitedList.put(solved, solved);
@@ -36,7 +36,8 @@ public class BFS_Solver extends GameSolver{
                 result[3] = String.valueOf(v.recDepth);
             }
             numOfProcessed++;
-            List<Board> neighbours = neighbours(v);
+            List<Board> neighbours = neighbours(v);                 //This adds to list all neighbours of v. Neighbour is a new state of board after
+                                                                    //making a move
             for (Board neighbour : neighbours) {
                 if (neighbour.isSolved()) {
                     float elapsedTime = (System.nanoTime() - startTime) / 1000000f;
@@ -47,7 +48,8 @@ public class BFS_Solver extends GameSolver{
                     result[4] = String.format("%.3f", elapsedTime);
                     return result;
                 }
-                if (!visitedList.containsKey(neighbour)) {
+                if (!visitedList.containsKey(neighbour)) {          //This checks whether the neighbour was already visited. If not, it's added to
+                                                                    //list for processing it later
                     newList.add(neighbour);
                     visitedList.put(neighbour, neighbour);
                 }

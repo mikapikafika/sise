@@ -31,30 +31,6 @@ public class Board {
         this.fields = fields;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public int getRecDepth() {
-        return recDepth;
-    }
-
-    public void setRecDepth(int recDepth) {
-        this.recDepth = recDepth;
-    }
-
-    public String getFields() {
-        String string ="";
-        for (int field : fields) {
-            string += field + " ";
-        }
-        return string;
-    }
-
     public void setZeroIndex(int zeroIndex) {
         this.zeroIndex = zeroIndex;
     }
@@ -98,7 +74,7 @@ public class Board {
         this.setZeroIndex(zeroIndex);
     }
 
-    public boolean isSolved() {
+    public boolean isSolved() {                         //Checks whether all fields are on their right positions
         for (int i = 0; i < fields.length - 1; i++) {
             if(fields[i] != i + 1) {
                 return false;

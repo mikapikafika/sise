@@ -25,7 +25,7 @@ public class ASTR_Solver extends GameSolver {
             result[4] = String.format("%.3f", elapsedTime);
             return result;
         }
-        PriorityQueue<Board> newList = new PriorityQueue<Board>(new ComparatorBoards());
+        PriorityQueue<Board> newList = new PriorityQueue<>(new ComparatorBoards());
         HashMap<Board, Board> processedList = new HashMap<>();
         newList.add(solved);
         int numOfVisited = 0;

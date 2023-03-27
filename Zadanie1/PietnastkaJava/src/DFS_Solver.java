@@ -31,7 +31,8 @@ public class DFS_Solver extends GameSolver {
 
         while (!newList.isEmpty()) {
             Board v = newList.pop();
-            if (v.recDepth < 20) {
+            if (v.recDepth < 20) {                                      //If the node's depth is greater than or equal to 20,
+                                                                        // the node is not processed further, and the loop continues to the next node.
                 if (!processedList.containsKey(v) || (processedList.containsKey(v)
                                     && v.recDepth < processedList.get(v).recDepth)) {
                     processedList.remove(v);
