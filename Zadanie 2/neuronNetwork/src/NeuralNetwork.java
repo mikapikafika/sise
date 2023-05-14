@@ -1,6 +1,7 @@
+import java.io.*;
 import java.util.List;
 
-public class NeuralNetwork {
+public class NeuralNetwork implements Serializable {
     private Neuron[][] hiddenLayers;
     private Neuron[] outputLayer;
 
@@ -50,5 +51,29 @@ public class NeuralNetwork {
             output[i] = layer[i].activate(input);
         }
         return output;
+    }
+
+    public void saveToFile(String filePath)
+    {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(filePath);
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(this);
+            objectOut.close();
+            fileOut.close();
+            System.out.println("Sieć neuronowa została zapisana do pliku.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static NeuralNetwork loadFromFile(String filePath) throws IOException, ClassNotFoundException {
+        FileInputStream fileIn = new FileInputStream(filePath);
+        ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+        NeuralNetwork network = (NeuralNetwork) objectIn.readObject();
+        objectIn.close();
+        fileIn.close();
+        System.out.println("Sieć neuronowa została wczytana z pliku.");
+        return network;
     }
 }

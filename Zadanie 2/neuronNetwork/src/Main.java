@@ -23,6 +23,14 @@ public class Main {
         for (double value : output) {
             System.out.println(value);
         }
+        neuralNetwork.saveToFile("zapisana.ser");
+
+        try {
+            NeuralNetwork network = NeuralNetwork.loadFromFile("zapisana.ser");
+            // Dalsze operacje na wczytanej sieci neuronowej
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

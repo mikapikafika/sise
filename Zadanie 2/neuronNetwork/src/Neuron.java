@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.List;
 
-public class Neuron {
+public class Neuron implements Serializable {
     private double[] weights;
     private double bias = 0.0;
 
