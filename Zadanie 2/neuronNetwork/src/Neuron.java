@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 public class Neuron implements Serializable {
@@ -34,11 +35,14 @@ public class Neuron implements Serializable {
         return output;
     }
 
+    public void updateWeightsWithMomentum(double learningRate, double momentum) {
+
+    }
+
     public void updateWeights(double learningRate) {
         for (int i = 0; i < weights.length; i++) {
             double weightChange = learningRate * lastWeightChanges[i];
             weights[i] -= weightChange;
-            lastWeightChanges[i] = weightChange; // Aktualizacja ostatnich zmian wag
         }
     }
 
@@ -62,11 +66,19 @@ public class Neuron implements Serializable {
         }
     }
 
-    public double getWeights(int index) {
+    public double getWeightAtIndex(int index) {
         return weights[index];
+    }
+
+    public double[] getWeights() {
+        return weights.clone();
     }
 
     public double getError() {
         return error;
+    }
+
+    public double getOutput() {
+        return output;
     }
 }

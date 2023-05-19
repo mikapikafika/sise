@@ -104,7 +104,7 @@ public class NeuralNetwork implements Serializable {
     }
 
     // trzeba wykorzystac jeszcze useMomentum
-    public void backPropagation(double[] errors, boolean useMomentum) {
+    public void backPropagation(double[] errors) {
             // Obliczanie błędów:
 
             // Dla warstwy wyjściowej
@@ -122,7 +122,7 @@ public class NeuralNetwork implements Serializable {
 
                     // Sumowanie wag neuronów w warstwie ukrytej wchodzących do neuronu i przemnożonych przez gradient neuronu w warstwie ukrytej???
                     for (Neuron nextLayerNeuron : hiddenLayers[i + 1]) {
-                        errorSum += nextLayerNeuron.getWeights(j) * nextLayerNeuron.getError();
+                        errorSum += nextLayerNeuron.getWeightAtIndex(j) * nextLayerNeuron.getError();
                     }
 
                     nextLayerErrors[j] = errorSum;
@@ -131,6 +131,24 @@ public class NeuralNetwork implements Serializable {
 
                 errors = nextLayerErrors;
             }
+    }
+
+    // Nie wiem czy nie trzeba uwzględnić gradientu licząc wagę z momentum dlatego skip implementacji w klasie Neuron - momentum jest stałe więc chyba ni
+
+    public void updateWeightsWithMomentum(double learningRate, double momentum) {
+
+        // Dla warstw ukrytych
+        for (int i = hiddenLayers.length - 1; i >= 0; i--) {
+            Neuron[] currentLayer = hiddenLayers[i];
+            for (Neuron neuron : currentLayer) {
+                neuron.updateWeightsWithMomentum(learningRate, momentum);
+            }
+        }
+
+        // Dla warstwy wyjściowej
+        for (Neuron neuron : outputLayer) {
+            neuron.updateWeightsWithMomentum(learningRate, momentum);
+        }
     }
 
     public void updateWeights(double learningRate) {
@@ -148,4 +166,51 @@ public class NeuralNetwork implements Serializable {
             neuron.updateWeights(learningRate);
         }
     }
+
+    public double[][] getOutputWeights() {
+        double[][] outputWeights = new double[outputLayer.length][];
+
+        for (int i = 0; i < outputLayer.length; i++) {
+            outputWeights[i] = outputLayer[i].getWeights();
+        }
+
+        return outputWeights;
+    }
+
+    public double[][] getHiddenLayerWeights() {
+        double[][] hiddenLayerWeights = new double[hiddenLayers.length][];
+
+        for (int i = 0; i < hiddenLayers.length; i++) {
+            Neuron[] hiddenLayer = hiddenLayers[i];
+            hiddenLayerWeights[i] = new double[hiddenLayer.length];
+
+            for (int j = 0; j < hiddenLayer.length; j++) {
+                hiddenLayerWeights[i][j] = hiddenLayer[j].getWeightAtIndex(j);
+            }
+        }
+
+        return hiddenLayerWeights;
+    }
+
+    public double[][] getHiddenLayerOutput() {
+        double[][] hiddenLayerOutput = new double[hiddenLayers.length][];
+
+        for (int i = 0; i < hiddenLayers.length; i++) {
+            Neuron[] hiddenLayer = hiddenLayers[i];
+            hiddenLayerOutput[i] = new double[hiddenLayer.length];
+
+            for (int j = 0; j < hiddenLayer.length; j++) {
+                hiddenLayerOutput[i][j] = hiddenLayer[j].getOutput();
+            }
+        }
+
+        return hiddenLayerOutput;
+    }
+
+    public int getOutputSize() {
+        return outputLayer.length;
+    }
+
+
+
 }
