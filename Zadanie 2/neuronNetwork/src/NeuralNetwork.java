@@ -78,11 +78,74 @@ public class NeuralNetwork implements Serializable {
     }
 
     public double[] feedForward(double[] inputPattern) {
+        double[] output = inputPattern;
+
+        // Dla warstw ukrytych
+        for (int i = 0; i < hiddenLayers.length; i++) {
+            double[] layerOutput = new double[hiddenLayers[i].length];
+
+            for (int j = 0; j < hiddenLayers[i].length; j++) {
+                Neuron neuron = hiddenLayers[i][j];
+                double neuronOutput = neuron.activate(output);
+                layerOutput[j] = neuronOutput;
+            }
+            output = layerOutput;
+        }
+
+        // Dla warstwy wyjściowej
+        double[] finalOutput = new double[outputLayer.length];
+        for (int i = 0; i < outputLayer.length; i++) {
+            Neuron neuron = outputLayer[i];
+            double neuronOutput = neuron.activate(output);
+            finalOutput[i] = neuronOutput;
+        }
+
+        return finalOutput;
     }
 
-    public void backpropagation(double[] errors, boolean useMomentum) {
+    // trzeba wykorzystac jeszcze useMomentum
+    public void backPropagation(double[] errors, boolean useMomentum) {
+            // Obliczanie błędów:
+
+            // Dla warstwy wyjściowej
+            for (int i = 0; i < outputLayer.length; i++) {
+                outputLayer[i].calculateError(errors[i]);
+            }
+
+            // Dla warstw ukrytych
+            for (int i = hiddenLayers.length - 1; i >= 0; i--) {
+                Neuron[] hiddenLayer = hiddenLayers[i];
+                double[] nextLayerErrors = new double[hiddenLayer.length];
+
+                for (int j = 0; j < hiddenLayer.length; j++) {
+                    double errorSum = 0.0;
+
+                    // Sumowanie wag neuronów w warstwie ukrytej wchodzących do neuronu i przemnożonych przez gradient neuronu w warstwie ukrytej???
+                    for (Neuron nextLayerNeuron : hiddenLayers[i + 1]) {
+                        errorSum += nextLayerNeuron.getWeights(j) * nextLayerNeuron.getError();
+                    }
+
+                    nextLayerErrors[j] = errorSum;
+                    hiddenLayer[j].calculateError(errorSum);
+                }
+
+                errors = nextLayerErrors;
+            }
     }
 
     public void updateWeights(double learningRate) {
+
+        // Dla warstw ukrytych
+        for (int i = hiddenLayers.length - 1; i >= 0; i--) {
+            Neuron[] currentLayer = hiddenLayers[i];
+            for (Neuron neuron : currentLayer) {
+                neuron.updateWeights(learningRate);
+            }
+        }
+
+        // Dla warstwy wyjściowej
+        for (Neuron neuron : outputLayer) {
+            neuron.updateWeights(learningRate);
+        }
     }
 }

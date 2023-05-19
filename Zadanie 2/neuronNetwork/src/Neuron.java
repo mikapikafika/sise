@@ -3,7 +3,10 @@ import java.util.List;
 
 public class Neuron implements Serializable {
     private double[] weights;
+    private double error;
+    private double[] lastWeightChanges;
     private double bias = 0.0;
+    private double output;
 
     public Neuron(int inputSize) {
         weights = new double[inputSize];
@@ -26,19 +29,44 @@ public class Neuron implements Serializable {
             sum += inputs[i] * weights[i];
         }
         sum += bias;
-        double output = sigmoid(sum);
+        output = sigmoid(sum);
 
         return output;
+    }
+
+    public void updateWeights(double learningRate) {
+        for (int i = 0; i < weights.length; i++) {
+            double weightChange = learningRate * lastWeightChanges[i];
+            weights[i] -= weightChange;
+            lastWeightChanges[i] = weightChange; // Aktualizacja ostatnich zmian wag
+        }
+    }
+
+    public void calculateError(double error) {
+        this.error = error * derivativeActivationFunction(output);
     }
 
     private double sigmoid(double x) {
         return 1 / (1 + Math.exp(-x));
     }
 
+    private double derivativeActivationFunction(double x) {
+        return sigmoid(x) * (1 - sigmoid(x));
+    }
+
+
     private void initializeWeights() {
         // Randomly initialize weights between -1 and 1
         for (int i = 0; i < weights.length; i++) {
             weights[i] = Math.random() * 2 - 1;
         }
+    }
+
+    public double getWeights(int index) {
+        return weights[index];
+    }
+
+    public double getError() {
+        return error;
     }
 }
