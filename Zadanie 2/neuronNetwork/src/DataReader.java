@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DataReader {
         private List<double[]> inputs;
@@ -96,7 +95,7 @@ public class DataReader {
             return outputs.get(index);
         }
 
-        public int getSize() {
+        public int getInputSize() {
             return inputs.size();
         }
     public int getTestSize() {

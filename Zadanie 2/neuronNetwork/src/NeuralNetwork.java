@@ -76,4 +76,13 @@ public class NeuralNetwork implements Serializable {
         System.out.println("Sieć neuronowa została wczytana z pliku.");
         return network;
     }
+
+    public double[] feedForward(double[] inputPattern) {
+    }
+
+    public void backpropagation(double[] errors, boolean useMomentum) {
+    }
+
+    public void updateWeights(double learningRate) {
+    }
 }

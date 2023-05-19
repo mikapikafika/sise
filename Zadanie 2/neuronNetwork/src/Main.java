@@ -31,7 +31,7 @@ public class Main {
         
         DataReader reader = new DataReader();
         reader.loadTrainingDataFromFile("C:\\Studia\\SISE\\Zadanie 2\\Irysy\\iris.txt", 0.8);
-        System.out.println(reader.getSize());
+        System.out.println(reader.getInputSize());
         System.out.println(reader.getTestSize());
         System.out.println(reader.getStringTestInput(2));
         System.out.println(reader.getStringTestOutput(2));
