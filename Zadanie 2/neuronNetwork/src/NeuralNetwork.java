@@ -98,7 +98,7 @@ public class NeuralNetwork implements Serializable {
             outputLayer.getNeuron(i).calculateError(errors.get(i));
         }
 
-        // dalam to tutaj zeby bylo uzywaned i cos sie dzieje ale niewiele
+        // dalam to tutaj zamiast w petli zeby bylo uzywaned i cos sie dzieje ale niewiele
         List<Double> nextLayerErrors = new ArrayList<>();
 
         for (int i = hiddenLayers.length - 1; i >= 0; i--) {
@@ -210,6 +210,8 @@ public class NeuralNetwork implements Serializable {
         }
         return output;
     }
+
+
 
     public int getOutputSize() {
         return outputLayer.getSize();
