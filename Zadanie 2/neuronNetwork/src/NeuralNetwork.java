@@ -91,37 +91,34 @@ public class NeuralNetwork implements Serializable {
         return finalOutput;
     }
 
-    // trzeba wykorzystac jeszcze useMomentum
+
     public void backPropagation(List<Double> errors) {
         // Obliczanie błędów dla warstwy wyjściowej
         for (int i = 0; i < outputLayer.getSize(); i++) {
             outputLayer.getNeuron(i).calculateError(errors.get(i));
         }
 
-        // Obliczanie błędów dla warstw ukrytych
+        // dalam to tutaj zeby bylo uzywaned i cos sie dzieje ale niewiele
+        List<Double> nextLayerErrors = new ArrayList<>();
+
         for (int i = hiddenLayers.length - 1; i >= 0; i--) {
             Layer hiddenLayer = hiddenLayers[i];
 
-            // Sprawdź, czy istnieje następna warstwa ukryta
             if (i + 1 < hiddenLayers.length) {
                 List<Neuron> nextLayerNeurons = hiddenLayers[i + 1].getNeurons();
-                List<Double> nextLayerErrors = new ArrayList<>();
+                nextLayerErrors.clear();
 
                 for (int j = 0; j < hiddenLayer.getSize(); j++) {
                     double errorSum = 0.0;
 
-                    // Sumowanie wag neuronów w następnej warstwie ukrytej wchodzących do neuronu i przemnożonych przez gradient neuronu w następnej warstwie ukrytej
                     for (Neuron nextLayerNeuron : nextLayerNeurons) {
                         errorSum += nextLayerNeuron.getWeightAtIndex(j) * nextLayerNeuron.getError();
                     }
 
-                    nextLayerErrors.add(j, errorSum);
-                    hiddenLayer.getNeuron(j).calculateError(errorSum);
+                    nextLayerErrors.add(errorSum);
+                    hiddenLayer.getNeuron(j).calculateError(nextLayerErrors.get(j)); // Retrieve error from nextLayerErrors
                 }
-
-                errors = nextLayerErrors;
             } else {
-                // Jeśli nie ma następnej warstwy ukrytej, oblicz błędy bez uwzględniania neuronów z następnej warstwy
                 for (int j = 0; j < hiddenLayer.getSize(); j++) {
                     double errorSum = 0.0;
                     hiddenLayer.getNeuron(j).calculateError(errorSum);

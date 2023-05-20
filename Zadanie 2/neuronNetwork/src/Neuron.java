@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Neuron implements Serializable {
@@ -11,12 +12,11 @@ public class Neuron implements Serializable {
 
     public Neuron(int inputSize) {
         weights = new ArrayList<>();
-        lastWeightChanges = weights;
-    }
+        lastWeightChanges = new ArrayList<>(Collections.nCopies(inputSize, 0.0));    }
 
     public Neuron(int inputSize, double biasIn) {
         weights = new ArrayList<>();
-        lastWeightChanges = weights;
+        lastWeightChanges = new ArrayList<>(Collections.nCopies(inputSize, 0.0));
         bias = biasIn;
     }
 
@@ -32,16 +32,33 @@ public class Neuron implements Serializable {
     }
 
     public void updateWeightsWithMomentum(double learningRate, double momentum) {
+        List<Double> tempWeightChanges = new ArrayList<>(lastWeightChanges);
 
+        for (int i = 0; i < weights.size(); i++) {
+            double gradient = learningRate * error * output;
+            double weightChange = gradient + momentum * tempWeightChanges.get(i);
+            double newWeight = weights.get(i) - weightChange;
+            weights.set(i, newWeight);
+            lastWeightChanges.set(i, weightChange);
+
+            System.out.println("Zmiana wagi dla wagi " + i + ": " + weightChange);
+            System.out.println("Zmieniona waga " + i + ": " + weights.get(i));
+        }
     }
 
     public void updateWeights(double learningRate) {
-        List<Double> temp = weights;
+        List<Double> tempWeightChanges = new ArrayList<>(lastWeightChanges);
+
         for (int i = 0; i < weights.size(); i++) {
-            double weightChange = learningRate * lastWeightChanges.get(i);
-            weights.set(i, weightChange);
+            double gradient = learningRate * error * output;
+            double weightChange = gradient + tempWeightChanges.get(i);
+            double newWeight = weights.get(i) - weightChange;
+            weights.set(i, newWeight);
+            lastWeightChanges.set(i, weightChange);
+
+            System.out.println("Zmiana wagi dla wagi " + i + ": " + weightChange);
+            System.out.println("Zmieniona waga " + i + ": " + weights.get(i));
         }
-        lastWeightChanges = temp;
     }
 
     public void calculateError(double error) {
