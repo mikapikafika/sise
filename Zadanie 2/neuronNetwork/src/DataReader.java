@@ -3,11 +3,11 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class DataReader {
-        private List<double[]> inputs;
-        private List<double[]> outputs;
+        private List<List<Double>> inputs;
+        private List<List<Double>> outputs;
 
-        private List<double[]> testInputs;
-        private List<double[]> testOutputs;
+        private List<List<Double>> testInputs;
+        private List<List<Double>> testOutputs;
 
         public DataReader() {
             inputs = new ArrayList<>();
@@ -40,29 +40,29 @@ public class DataReader {
                 int randomIndex = random.nextInt(data.size());
                 String[] values = data.remove(randomIndex);
 
-                double[] input = new double[values.length - 1];
+                List<Double> input = new ArrayList<>();
                 //Wyjście w postaci tablicy trzech double - każdy dla jednej klasy kwiatka
-                double[] output = new double[3];
+                List<Double> output = new ArrayList<>();
 
                 //Przypisanie usuniętej z data wartości do danych wejściowych
                 for (int i = 0; i < values.length - 1; i++) {
-                    input[i] = Double.parseDouble(values[i]);
+                    input.add(i, Double.parseDouble(values[i]));
                 }
 
                 //Ustanowienie wzorca wyjścia
                 String className = values[values.length - 1];
                 if (className.equals("Iris-setosa")) {
-                    output[0] = 1.0;
-                    output[1] = 0.0;
-                    output[2] = 0.0;
+                    output.add(0, 1.0);
+                    output.add(1, 0.0);
+                    output.add(2, 0.0);
                 } else if (className.equals("Iris-versicolor")) {
-                    output[0] = 0.0;
-                    output[1] = 1.0;
-                    output[2] = 0.0;
+                    output.add(0, 0.0);
+                    output.add(1, 1.0);
+                    output.add(2, 0.0);
                 } else if (className.equals("Iris-virginica")) {
-                    output[0] = 0.0;
-                    output[1] = 0.0;
-                    output[2] = 1.0;
+                    output.add(0, 0.0);
+                    output.add(1, 0.0);
+                    output.add(2, 1.0);
                 }
 
                 //Sprawdza, czy liczba wczytanych danych jest mniejsza trainingSize. Jeśli tak, to wzorzec
@@ -77,21 +77,21 @@ public class DataReader {
             scanner.close();
         }
 
-        public void addTrainingExample(double[] input, double[] output) {
+        public void addTrainingExample(List<Double> input, List<Double> output) {
             inputs.add(input);
             outputs.add(output);
         }
 
-        public void addTestExample(double[] input, double[] output) {
+        public void addTestExample(List<Double> input, List<Double> output) {
             testInputs.add(input);
             testOutputs.add(output);
         }
 
-        public double[] getInput(int index) {
+        public List<Double> getInput(int index) {
             return inputs.get(index);
         }
 
-        public double[] getOutput(int index) {
+        public List<Double> getOutput(int index) {
             return outputs.get(index);
         }
 
@@ -102,39 +102,11 @@ public class DataReader {
         return testInputs.size();
     }
 
-    public double[] getTestInput(int index) {
+    public List<Double> getTestInput(int index) {
         return testInputs.get(index);
     }
-    public double[] getTestOutput(int index) {
+    public List<Double> getTestOutput(int index) {
         return testOutputs.get(index);
     }
 
-    public String getStringInput(int index) {
-        StringBuilder sb = new StringBuilder();
-        double[] array = inputs.get(index);
-        sb.append(Arrays.toString(array));
-        String result = sb.toString();
-        return result;
-    }
-    public String getStringOutput(int index) {
-        StringBuilder sb = new StringBuilder();
-        double[] array = outputs.get(index);
-        sb.append(Arrays.toString(array));
-        String result = sb.toString();
-        return result;
-    }
-    public String getStringTestInput(int index) {
-        StringBuilder sb = new StringBuilder();
-        double[] array = testInputs.get(index);
-        sb.append(Arrays.toString(array));
-        String result = sb.toString();
-        return result;
-    }
-    public String getStringTestOutput(int index) {
-        StringBuilder sb = new StringBuilder();
-        double[] array = testOutputs.get(index);
-        sb.append(Arrays.toString(array));
-        String result = sb.toString();
-        return result;
-    }
 }

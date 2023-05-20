@@ -1,33 +1,29 @@
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Neuron implements Serializable {
-    private double[] weights;
+    private List<Double> weights;
     private double error;
-    private double[] lastWeightChanges;
+    private List<Double> lastWeightChanges;
     private double bias = 0.0;
     private double output;
 
     public Neuron(int inputSize) {
-        weights = new double[inputSize];
-        initializeWeights();
+        weights = new ArrayList<>();
+        lastWeightChanges = weights;
     }
 
     public Neuron(int inputSize, double biasIn) {
-        weights = new double[inputSize];
-        initializeWeights();
+        weights = new ArrayList<>();
+        lastWeightChanges = weights;
         bias = biasIn;
     }
 
-    public double activate(double[] inputs) {
-        if (inputs.length != weights.length) {
-            throw new IllegalArgumentException("Input size doesn't match weight size");
-        }
-
+    public double activate(List<Double> inputs) {
         double sum = 0.0;
-        for (int i = 0; i < inputs.length; i++) {
-            sum += inputs[i] * weights[i];
+        for (int i = 0; i < inputs.size(); i++) {
+            sum += inputs.get(i) * weights.get(i);
         }
         sum += bias;
         output = sigmoid(sum);
@@ -40,10 +36,12 @@ public class Neuron implements Serializable {
     }
 
     public void updateWeights(double learningRate) {
-        for (int i = 0; i < weights.length; i++) {
-            double weightChange = learningRate * lastWeightChanges[i];
-            weights[i] -= weightChange;
+        List<Double> temp = weights;
+        for (int i = 0; i < weights.size(); i++) {
+            double weightChange = learningRate * lastWeightChanges.get(i);
+            weights.set(i, weightChange);
         }
+        lastWeightChanges = temp;
     }
 
     public void calculateError(double error) {
@@ -59,19 +57,20 @@ public class Neuron implements Serializable {
     }
 
 
-    private void initializeWeights() {
-        // Randomly initialize weights between -1 and 1
-        for (int i = 0; i < weights.length; i++) {
-            weights[i] = Math.random() * 2 - 1;
+    public double getWeightAtIndex(int index) {
+        return weights.get(index);
+    }
+
+    public void setWeights(List<Double> weights) {
+        this.weights = weights;
+        for(int i = 0; i < weights.size(); i++)
+        {
+            lastWeightChanges.add(i, 1.0);
         }
     }
 
-    public double getWeightAtIndex(int index) {
-        return weights[index];
-    }
-
-    public double[] getWeights() {
-        return weights.clone();
+    public List<Double> getWeights() {
+        return weights;
     }
 
     public double getError() {

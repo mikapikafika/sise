@@ -1,54 +1,42 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NeuralNetwork implements Serializable {
-    private Neuron[][] hiddenLayers;
-    private Neuron[] outputLayer;
+    private Layer[] hiddenLayers;
+    private Layer outputLayer;
 
     //Kiedy tworzymy sieć, hiddenSizes musimy podać jako, np. {4, 2}, czyli pierwsza warstwa ukryta składa się z 4, a druga z 2 neuronów
     public NeuralNetwork(int inputSize, int[] hiddenSizes, int outputSize) {
-        hiddenLayers = new Neuron[hiddenSizes.length][];
-        outputLayer = new Neuron[outputSize];
+        hiddenLayers = new Layer[hiddenSizes.length];
+        outputLayer = new Layer(outputSize, hiddenSizes[hiddenSizes.length - 1]);
 
         // Inicjalizacja warstw ukrytych
         for (int i = 0; i < hiddenSizes.length; i++) {
             int currentSize = hiddenSizes[i];
-            hiddenLayers[i] = new Neuron[currentSize];
-
-            // Inicjalizacja neuronów w warstwie ukrytej
-            for (int j = 0; j < currentSize; j++) {
-                //Jeżeli to pierwsza iteracja, rozmiar wejścia neuronu to inputSize. W przeciwnym wypadku hiddenSizes[i - 1]
-                int prevLayerSize = (i == 0) ? inputSize : hiddenSizes[i - 1];
-                hiddenLayers[i][j] = new Neuron(prevLayerSize);
-            }
-        }
-
-        // Inicjalizacja warstwy wyjściowej
-        for (int i = 0; i < outputSize; i++) {
-            //Ustawiamy rozmiar wejść neuronów wyjściowych na rozmiar outputu ostatniej warstwy ukrytej, ale najpierw sprawdzamy, czy taka w ogóle istnieje
-            int prevLayerSize = (hiddenSizes.length == 0) ? inputSize : hiddenSizes[hiddenSizes.length - 1];
-            outputLayer[i] = new Neuron(prevLayerSize);
+            int prevSize = (i == 0) ? inputSize : hiddenSizes[i - 1];
+            hiddenLayers[i] = new Layer(currentSize, prevSize);
         }
     }
 
-    public double[] predict(double[] input) {
-        double[] output = input;
+    public List<Double> predict(List<Double> input) {
+        List<Double> output = input;
 
-        // Obliczanie wyjścia dla warstw ukrytych
-        for (Neuron[] hiddenLayer : hiddenLayers) {
-            output = calculateLayerOutput(output, hiddenLayer);
+        // Propagacja sygnału przez warstwy ukryte
+        for (Layer hiddenLayer : hiddenLayers) {
+            output = hiddenLayer.propagate(output);
         }
 
-        // Obliczanie wyjścia dla warstwy wyjściowej
-        output = calculateLayerOutput(output, outputLayer);
+        // Propagacja sygnału przez warstwę wyjściową
+        output = outputLayer.propagate(output);
 
         return output;
     }
 
-    private double[] calculateLayerOutput(double[] input, Neuron[] layer) {
-        double[] output = new double[layer.length];
+    private List<Double> calculateLayerOutput(List<Double> input, Neuron[] layer) {
+        List<Double> output = new ArrayList<>();
         for (int i = 0; i < layer.length; i++) {
-            output[i] = layer[i].activate(input);
+            output.set(i, layer[i].activate(input));
         }
         return output;
     }
@@ -77,60 +65,69 @@ public class NeuralNetwork implements Serializable {
         return network;
     }
 
-    public double[] feedForward(double[] inputPattern) {
-        double[] output = inputPattern;
+    public List<Double> feedForward(List<Double> inputPattern) {
+        List<Double> output = inputPattern;
 
         // Dla warstw ukrytych
         for (int i = 0; i < hiddenLayers.length; i++) {
-            double[] layerOutput = new double[hiddenLayers[i].length];
+            List<Double> layerOutput = new ArrayList<>();
 
-            for (int j = 0; j < hiddenLayers[i].length; j++) {
-                Neuron neuron = hiddenLayers[i][j];
+            for (int j = 0; j < hiddenLayers[i].getSize(); j++) {
+                Neuron neuron = hiddenLayers[i].getNeuron(j);
                 double neuronOutput = neuron.activate(output);
-                layerOutput[j] = neuronOutput;
+                layerOutput.add(j, neuronOutput);
             }
             output = layerOutput;
         }
 
         // Dla warstwy wyjściowej
-        double[] finalOutput = new double[outputLayer.length];
-        for (int i = 0; i < outputLayer.length; i++) {
-            Neuron neuron = outputLayer[i];
+        List<Double> finalOutput = new ArrayList<>();
+        for (int i = 0; i < outputLayer.getSize(); i++) {
+            Neuron neuron = outputLayer.getNeuron(i);
             double neuronOutput = neuron.activate(output);
-            finalOutput[i] = neuronOutput;
+            finalOutput.add(i, neuronOutput);
         }
 
         return finalOutput;
     }
 
     // trzeba wykorzystac jeszcze useMomentum
-    public void backPropagation(double[] errors) {
-            // Obliczanie błędów:
+    public void backPropagation(List<Double> errors) {
+        // Obliczanie błędów dla warstwy wyjściowej
+        for (int i = 0; i < outputLayer.getSize(); i++) {
+            outputLayer.getNeuron(i).calculateError(errors.get(i));
+        }
 
-            // Dla warstwy wyjściowej
-            for (int i = 0; i < outputLayer.length; i++) {
-                outputLayer[i].calculateError(errors[i]);
-            }
+        // Obliczanie błędów dla warstw ukrytych
+        for (int i = hiddenLayers.length - 1; i >= 0; i--) {
+            Layer hiddenLayer = hiddenLayers[i];
 
-            // Dla warstw ukrytych
-            for (int i = hiddenLayers.length - 1; i >= 0; i--) {
-                Neuron[] hiddenLayer = hiddenLayers[i];
-                double[] nextLayerErrors = new double[hiddenLayer.length];
+            // Sprawdź, czy istnieje następna warstwa ukryta
+            if (i + 1 < hiddenLayers.length) {
+                List<Neuron> nextLayerNeurons = hiddenLayers[i + 1].getNeurons();
+                List<Double> nextLayerErrors = new ArrayList<>();
 
-                for (int j = 0; j < hiddenLayer.length; j++) {
+                for (int j = 0; j < hiddenLayer.getSize(); j++) {
                     double errorSum = 0.0;
 
-                    // Sumowanie wag neuronów w warstwie ukrytej wchodzących do neuronu i przemnożonych przez gradient neuronu w warstwie ukrytej???
-                    for (Neuron nextLayerNeuron : hiddenLayers[i + 1]) {
+                    // Sumowanie wag neuronów w następnej warstwie ukrytej wchodzących do neuronu i przemnożonych przez gradient neuronu w następnej warstwie ukrytej
+                    for (Neuron nextLayerNeuron : nextLayerNeurons) {
                         errorSum += nextLayerNeuron.getWeightAtIndex(j) * nextLayerNeuron.getError();
                     }
 
-                    nextLayerErrors[j] = errorSum;
-                    hiddenLayer[j].calculateError(errorSum);
+                    nextLayerErrors.add(j, errorSum);
+                    hiddenLayer.getNeuron(j).calculateError(errorSum);
                 }
 
                 errors = nextLayerErrors;
+            } else {
+                // Jeśli nie ma następnej warstwy ukrytej, oblicz błędy bez uwzględniania neuronów z następnej warstwy
+                for (int j = 0; j < hiddenLayer.getSize(); j++) {
+                    double errorSum = 0.0;
+                    hiddenLayer.getNeuron(j).calculateError(errorSum);
+                }
             }
+        }
     }
 
     // Nie wiem czy nie trzeba uwzględnić gradientu licząc wagę z momentum dlatego skip implementacji w klasie Neuron - momentum jest stałe więc chyba ni
@@ -139,14 +136,14 @@ public class NeuralNetwork implements Serializable {
 
         // Dla warstw ukrytych
         for (int i = hiddenLayers.length - 1; i >= 0; i--) {
-            Neuron[] currentLayer = hiddenLayers[i];
-            for (Neuron neuron : currentLayer) {
+            Layer currentLayer = hiddenLayers[i];
+            for (Neuron neuron : currentLayer.getNeurons()) {
                 neuron.updateWeightsWithMomentum(learningRate, momentum);
             }
         }
 
         // Dla warstwy wyjściowej
-        for (Neuron neuron : outputLayer) {
+        for (Neuron neuron : outputLayer.getNeurons()) {
             neuron.updateWeightsWithMomentum(learningRate, momentum);
         }
     }
@@ -155,62 +152,69 @@ public class NeuralNetwork implements Serializable {
 
         // Dla warstw ukrytych
         for (int i = hiddenLayers.length - 1; i >= 0; i--) {
-            Neuron[] currentLayer = hiddenLayers[i];
-            for (Neuron neuron : currentLayer) {
+            Layer currentLayer = hiddenLayers[i];
+            for (Neuron neuron : currentLayer.getNeurons()) {
                 neuron.updateWeights(learningRate);
             }
         }
 
         // Dla warstwy wyjściowej
-        for (Neuron neuron : outputLayer) {
+        for (Neuron neuron : outputLayer.getNeurons()) {
             neuron.updateWeights(learningRate);
         }
     }
 
-    public double[][] getOutputWeights() {
-        double[][] outputWeights = new double[outputLayer.length][];
+    public String getOutputWeights() {
+        List<List<Double>> outputWeights = new ArrayList<>();
 
-        for (int i = 0; i < outputLayer.length; i++) {
-            outputWeights[i] = outputLayer[i].getWeights();
+        for (int i = 0; i < outputLayer.getSize(); i++) {
+            outputWeights.add(i, outputLayer.getNeuron(i).getWeights());
         }
-
-        return outputWeights;
+        StringBuilder sb = new StringBuilder();
+        for (List<Double> weights : outputWeights) {
+            sb.append(weights.toString()).append(", ");
+        }
+        String output = sb.toString();
+        if (!output.isEmpty()) {
+            output = output.substring(0, output.length() - 2); // Usuń ostatni przecinek i spację
+        }
+        return output;
     }
 
     public double[][] getHiddenLayerWeights() {
         double[][] hiddenLayerWeights = new double[hiddenLayers.length][];
 
         for (int i = 0; i < hiddenLayers.length; i++) {
-            Neuron[] hiddenLayer = hiddenLayers[i];
-            hiddenLayerWeights[i] = new double[hiddenLayer.length];
+            Layer hiddenLayer = hiddenLayers[i];
+            hiddenLayerWeights[i] = new double[hiddenLayer.getSize()];
 
-            for (int j = 0; j < hiddenLayer.length; j++) {
-                hiddenLayerWeights[i][j] = hiddenLayer[j].getWeightAtIndex(j);
+            for (int j = 0; j < hiddenLayer.getSize(); j++) {
+                hiddenLayerWeights[i][j] = hiddenLayer.getNeuron(j).getWeightAtIndex(j);
             }
         }
 
         return hiddenLayerWeights;
     }
 
-    public double[][] getHiddenLayerOutput() {
-        double[][] hiddenLayerOutput = new double[hiddenLayers.length][];
+    public String getHiddenLayerOutput() {
+        List<List<Double>> hiddenLayerOutput = new ArrayList<>();
 
         for (int i = 0; i < hiddenLayers.length; i++) {
-            Neuron[] hiddenLayer = hiddenLayers[i];
-            hiddenLayerOutput[i] = new double[hiddenLayer.length];
-
-            for (int j = 0; j < hiddenLayer.length; j++) {
-                hiddenLayerOutput[i][j] = hiddenLayer[j].getOutput();
-            }
+            Layer hiddenLayer = hiddenLayers[i];
+            hiddenLayerOutput.add(i, hiddenLayer.getOutputs());
         }
-
-        return hiddenLayerOutput;
+        StringBuilder sb = new StringBuilder();
+        for (List<Double> weights : hiddenLayerOutput) {
+            sb.append(weights.toString()).append(", ");
+        }
+        String output = sb.toString();
+        if (!output.isEmpty()) {
+            output = output.substring(0, output.length() - 2); // Usuń ostatni przecinek i spację
+        }
+        return output;
     }
 
     public int getOutputSize() {
-        return outputLayer.length;
+        return outputLayer.getSize();
     }
-
-
-
 }

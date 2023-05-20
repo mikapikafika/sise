@@ -34,14 +34,14 @@ public class NeuralNetworkTrainer {
 
             for (int i = 0; i < numTrainingPatterns; i++) {
                 int patternIndex = patternOrder.get(i);
-                double[] inputPattern = data.getInput(patternIndex);
-                double[] targetOutput = data.getOutput(patternIndex);
+                List<Double> inputPattern = data.getInput(patternIndex);
+                List<Double> targetOutput = data.getOutput(patternIndex);
 
                 // Propagacja w przód
-                double[] output = neuralNetwork.feedForward(inputPattern);
+                List<Double> output = neuralNetwork.feedForward(inputPattern);
 
                 // Obliczenie błędów
-                double[] errors = calculateErrors(output, targetOutput);
+                List<Double> errors = calculateErrors(output, targetOutput);
 
                 // Propagacja wsteczna
                 neuralNetwork.backPropagation(errors);
@@ -75,22 +75,22 @@ public class NeuralNetworkTrainer {
 
             for (int i = 0; i < numTestingPatterns; i++) {
                 int patternIndex = patternOrder.get(i);
-                double[] inputPattern = data.getTestInput(patternIndex);
-                double[] targetOutput = data.getTestOutput(patternIndex);
+                List<Double> inputPattern = data.getTestInput(patternIndex);
+                List<Double> targetOutput = data.getTestOutput(patternIndex);
 
                 // Propagacja w przód
-                double[] output = neuralNetwork.feedForward(inputPattern);
+                List<Double> output = neuralNetwork.feedForward(inputPattern);
 
                 // Obliczenie błędów
-                double[] errors = calculateErrors(output, targetOutput);
+                List<Double> errors = calculateErrors(output, targetOutput);
 
                 // Rejestrowanie wartości do pliku
-                bufferedWriter.write("Wzorzec wejściowy: " + Arrays.toString(inputPattern) + "\n");
-                bufferedWriter.write("Błąd popełniony przez sieć dla całego wzorca: " + Arrays.toString(errors) + "\n");
-                bufferedWriter.write("Oczekiwany wzorzec odpowiedzi: " + Arrays.toString(targetOutput) + "\n");
-                bufferedWriter.write("Wartości wyjściowe neuronów: " + Arrays.toString(output) + "\n");
-                bufferedWriter.write("Wagi neuronów wyjściowych: " + Arrays.deepToString(neuralNetwork.getOutputWeights()) + "\n");
-                bufferedWriter.write("Wartości wyjściowe neuronów ukrytych: " + Arrays.toString(neuralNetwork.getHiddenLayerOutput()) + "\n");
+                bufferedWriter.write("Wzorzec wejściowy: " + inputPattern.toString() + "\n");
+                bufferedWriter.write("Błąd popełniony przez sieć dla całego wzorca: " + errors.toString() + "\n");
+                bufferedWriter.write("Oczekiwany wzorzec odpowiedzi: " + targetOutput.toString() + "\n");
+                bufferedWriter.write("Wartości wyjściowe neuronów: " + output.toString() + "\n");
+                bufferedWriter.write("Wagi neuronów wyjściowych: " + neuralNetwork.getOutputWeights() + "\n");
+                bufferedWriter.write("Wartości wyjściowe neuronów ukrytych: " + neuralNetwork.getHiddenLayerOutput() + "\n");
                 bufferedWriter.write("Wagi neuronów ukrytych: " + Arrays.deepToString(neuralNetwork.getHiddenLayerWeights()) + "\n");
                 bufferedWriter.newLine();
 
@@ -103,11 +103,11 @@ public class NeuralNetworkTrainer {
 
 
 
-    private double[] calculateErrors(double[] output, double[] targetOutput) {
-        double[] errors = new double[output.length];
+    private List<Double> calculateErrors(List<Double> output, List<Double> targetOutput) {
+        List<Double> errors = new ArrayList<>();
 
-        for (int i = 0; i < output.length; i++) {
-            errors[i] = targetOutput[i] - output[i];
+        for (int i = 0; i < output.size(); i++) {
+            errors.add(i, targetOutput.get(i) - output.get(i));
         }
 
         return errors;
@@ -118,12 +118,12 @@ public class NeuralNetworkTrainer {
         double totalError = 0.0;
 
         for (int i = 0; i < numPatterns; i++) {
-            double[] inputPattern = data.getInput(i);
-            double[] targetOutput = data.getOutput(i);
-            double[] output = neuralNetwork.feedForward(inputPattern);
+            List<Double> inputPattern = data.getInput(i);
+            List<Double> targetOutput = data.getOutput(i);
+            List<Double> output = neuralNetwork.feedForward(inputPattern);
 
-            for (int j = 0; j < output.length; j++) {
-                double error = targetOutput[j] - output[j];
+            for (int j = 0; j < output.size(); j++) {
+                double error = targetOutput.get(j) - output.get(j);
                 totalError += Math.pow(error, 2);
             }
         }
