@@ -20,20 +20,21 @@ public class ResearchResults {
     // a wewnetrzna dla klas
     // expectedoutputs no to to samo ale oczekiwane
 
-    public List<List<Double>> getClassificationResults(DataReader data, NeuralNetwork neuralNetwork) {
+    // A tylko skapnelam sie ze mamy np metode calculateLayerOutput, predict itd i w sumie mozna jej i podobnych tu uzyc ale ide spac
+
+    public void getClassificationResults(DataReader data, NeuralNetwork neuralNetwork) {
         int numPatterns = data.getInputSize();
         for (int i = 0; i < numPatterns; i++) {
             List<Double> inputPattern = data.getInput(i);
             List<Double> targetOutput = data.getOutput(i);
 
-            // Obliczenie wyników klasyfikacji dla obiektu
+            // Obliczenie wyników klasyfikacji dla obiektu chyba tak?
             List<Double> output = neuralNetwork.feedForward(inputPattern);
 
             // Dodanie wyników klasyfikacji i oczekiwanych wyników do odpowiednich list
             outputs.add(output);
             expectedOutputs.add(targetOutput);
         }
-        return outputs;
     }
 
 
