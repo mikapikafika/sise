@@ -3,6 +3,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+import static java.lang.Math.pow;
+
 public class NeuralNetworkTrainer {
     private static final double LEARNING_RATE = 0.1;
     private static final double MOMENTUM_FACTOR = 0.9;
@@ -107,7 +109,7 @@ public class NeuralNetworkTrainer {
         List<Double> errors = new ArrayList<>();
 
         for (int i = 0; i < output.size(); i++) {
-            errors.add(i, targetOutput.get(i) - output.get(i));
+            errors.add(i, pow(targetOutput.get(i) - output.get(i), 2)/2);
         }
 
         return errors;
@@ -124,7 +126,7 @@ public class NeuralNetworkTrainer {
 
             for (int j = 0; j < output.size(); j++) {
                 double error = targetOutput.get(j) - output.get(j);
-                totalError += Math.pow(error, 2);
+                totalError += pow(error, 2);
             }
         }
 

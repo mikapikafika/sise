@@ -2,6 +2,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class Neuron implements Serializable {
     private List<Double> weights;
@@ -12,14 +13,26 @@ public class Neuron implements Serializable {
 
     public Neuron(int inputSize) {
         weights = new ArrayList<>();
+        initializeRandomWeights(inputSize);
         lastWeightChanges = new ArrayList<>(Collections.nCopies(inputSize, 0.0));    }
 
     public Neuron(int inputSize, double biasIn) {
         weights = new ArrayList<>();
+        initializeRandomWeights(inputSize);
         lastWeightChanges = new ArrayList<>(Collections.nCopies(inputSize, 0.0));
         bias = biasIn;
     }
 
+    public void initializeRandomWeights(int inputSize) {
+        Random random = new Random();
+        weights.clear();
+
+        for (int i = 0; i < inputSize; i++) {
+            // Losowanie wagi z przedziału [-1, 1]
+            double weight = random.nextDouble() * 2 - 1;
+            weights.add(weight);
+        }
+    }
     public double activate(List<Double> inputs) {
         double sum = 0.0;
         for (int i = 0; i < inputs.size(); i++) {
