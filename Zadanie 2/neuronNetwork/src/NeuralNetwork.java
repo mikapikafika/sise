@@ -1,12 +1,11 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class NeuralNetwork implements Serializable {
     private Neuron[][] hiddenLayers;
     private Neuron[] outputLayer;
-    private List<Double> hiddenLayerOutput = new ArrayList<>();
-    private List<Double> outputLayerOutput = new ArrayList<>();
 
     private double[] outputLayerGradient;
     private double[] hiddenLayerGradient;
@@ -51,27 +50,27 @@ public class NeuralNetwork implements Serializable {
 
         // WARSTWY UKRYTE
         for (int i = 0; i < hiddenLayers.length; i++) {
-            //List<Double> layerOutput = new ArrayList<>();
+            List<Double> layerOutput = new ArrayList<>();
 
             for (int j = 0; j < hiddenLayers[i].length; j++) {
                 Neuron neuron = hiddenLayers[i][j];
                 double neuronOutput = neuron.activate(output);
-                hiddenLayerOutput.add(j, neuronOutput);
+                layerOutput .add(j, neuronOutput);
             }
-            output = hiddenLayerOutput;
+            output = layerOutput;
         }
 
         // WARSTWA WYJŚCIOWA
-//        List<Double> finalOutput = new ArrayList<>();
+        List<Double> finalOutput = new ArrayList<>();
         for (int i = 0; i < outputLayer.length; i++) {
             Neuron neuron = outputLayer[i];
             double neuronOutput = neuron.activate(output);
-            outputLayerOutput.add(i, neuronOutput);
+            finalOutput.add(i, neuronOutput);
         }
 
-        System.out.println("rezultat propagacji w przód: " + outputLayerOutput);
+        System.out.println("rezultat propagacji w przód: " + finalOutput);
 
-        return outputLayerOutput;
+        return finalOutput;
     }
 
 //    public void backPropagation(List<Double> output, List<Double> targetOutput, List<Double> errors) {
@@ -129,7 +128,7 @@ public class NeuralNetwork implements Serializable {
             double derivative = neuron.derivativeActivationFunction(weightedSignalSum);                     // f'(z_i)
             outputLayerGradient[i] = (calculateLayerOutput(inputPattern, outputLayer).get(i) - targetOutput.get(i)) * derivative;         // delta_i = (y_i - t_i) * f'(z_i), hubert ma jeszcze coś
         }
-        System.out.println("Błąd wyjścia: " + outputLayerOutput);
+        System.out.println("Błąd wyjścia: " + Arrays.toString(outputLayerGradient));
 
 
         // WARSTWY UKRYTE
