@@ -63,8 +63,8 @@ public class Neuron implements Serializable {
             weights.set(i, newWeight);
             lastWeightChanges.set(i, weightChange);
 
-            System.out.println("Zmiana wagi dla wagi " + i + ": " + weightChange);
-            System.out.println("Zmieniona waga " + i + ": " + weights.get(i));
+//            System.out.println("Zmiana wagi dla wagi " + i + ": " + weightChange);
+//            System.out.println("Zmieniona waga " + i + ": " + weights.get(i));
         }
     }
 
@@ -78,8 +78,8 @@ public class Neuron implements Serializable {
             weights.set(i, newWeight);
             lastWeightChanges.set(i, weightChange);
 
-            System.out.println("Zmiana wagi dla wagi " + i + ": " + weightChange);
-            System.out.println("Zmieniona waga " + i + ": " + weights.get(i));
+//            System.out.println("Zmiana wagi dla wagi " + i + ": " + weightChange);
+//            System.out.println("Zmieniona waga " + i + ": " + weights.get(i));
         }
     }
 

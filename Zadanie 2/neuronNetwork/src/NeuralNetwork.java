@@ -34,39 +34,34 @@ public class NeuralNetwork implements Serializable {
 
 
     public List<Double> feedForward(List<Double> inputPattern) {
-
-        // WARSTWA UKRYTA
+        // Dla każdego neuronu w warstwie, oblicz sumę ważoną poprzez pomnożenie wartości wejściowych przez odpowiadające im wagi i zsumowanie tych iloczynów
+        // Następnie dodaj bias (przesunięcie) do obliczonej sumy ważonej i zastosuj funkcję aktywacji (wszystko dzieje się w activate)
         List<Double> output = inputPattern;
 
+        // Dla warstw ukrytych
         for (int i = 0; i < hiddenLayers.length; i++) {
-            List<Double> hiddenLayerOutput = new ArrayList<>();
+            List<Double> layerOutput = new ArrayList<>();
 
-            // Dla każdego neuronu w warstwie ukrytej, oblicz sumę ważoną poprzez pomnożenie wartości wejściowych przez odpowiadające im wagi i zsumowanie tych iloczynów
             for (int j = 0; j < hiddenLayers[i].length; j++) {
                 Neuron neuron = hiddenLayers[i][j];
-                output.add(j,inputPattern.get(j) * neuron.getWeightAtIndex(j));
-                // Następnie dodaj bias (przesunięcie) do obliczonej sumy ważonej i zastosuj funkcję aktywacji (wszystko dzieje się w activate)
                 double neuronOutput = neuron.activate(output);
-                hiddenLayerOutput.add(j, neuronOutput);
+                layerOutput.add(j, neuronOutput);
             }
-            output = hiddenLayerOutput;
+            output = layerOutput;
         }
 
-        // WARSTWA WYJŚCIOWA
+        // Dla warstwy wyjściowej
         List<Double> finalOutput = new ArrayList<>();
         for (int i = 0; i < outputLayer.length; i++) {
             Neuron neuron = outputLayer[i];
-            // Przemnóż wartości wejściowe przez wagi i zsumuj iloczyny.
-            output.add(i,inputPattern.get(i) * neuron.getWeightAtIndex(i));
-            // Dodaj bias. Na obliczonej sumie ważonej dla każdego neuronu w warstwie wyjściowej zastosuj odpowiednią funkcję aktywacji.
             double neuronOutput = neuron.activate(output);
             finalOutput.add(i, neuronOutput);
         }
 
+        System.out.println("rezultat propagacji w przód: " + finalOutput);
+
         return finalOutput;
     }
-
-
 
 
 
