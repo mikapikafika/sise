@@ -44,6 +44,15 @@ public class Neuron implements Serializable {
         return output;
     }
 
+    public double getWeightAtIndex(int index) {
+        return weights.get(index);
+    }
+
+
+
+    ///////////////
+
+
     public void updateWeightsWithMomentum(double learningRate, double momentum) {
         List<Double> tempWeightChanges = new ArrayList<>(lastWeightChanges);
 
@@ -87,9 +96,7 @@ public class Neuron implements Serializable {
     }
 
 
-    public double getWeightAtIndex(int index) {
-        return weights.get(index);
-    }
+
 
     public void setWeights(List<Double> weights) {
         this.weights = weights;

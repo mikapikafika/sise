@@ -32,6 +32,56 @@ public class NeuralNetwork implements Serializable {
         }
     }
 
+
+    public List<Double> feedForward(List<Double> inputPattern) {
+
+        // WARSTWA UKRYTA
+        List<Double> output = inputPattern;
+
+        for (int i = 0; i < hiddenLayers.length; i++) {
+            List<Double> hiddenLayerOutput = new ArrayList<>();
+
+            // Dla każdego neuronu w warstwie ukrytej, oblicz sumę ważoną poprzez pomnożenie wartości wejściowych przez odpowiadające im wagi i zsumowanie tych iloczynów
+            for (int j = 0; j < hiddenLayers[i].length; j++) {
+                Neuron neuron = hiddenLayers[i][j];
+                output.add(j,inputPattern.get(j) * neuron.getWeightAtIndex(j));
+                // Następnie dodaj bias (przesunięcie) do obliczonej sumy ważonej i zastosuj funkcję aktywacji (wszystko dzieje się w activate)
+                double neuronOutput = neuron.activate(output);
+                hiddenLayerOutput.add(j, neuronOutput);
+            }
+            output = hiddenLayerOutput;
+        }
+
+        // WARSTWA WYJŚCIOWA
+        List<Double> finalOutput = new ArrayList<>();
+        for (int i = 0; i < outputLayer.length; i++) {
+            Neuron neuron = outputLayer[i];
+            // Przemnóż wartości wejściowe przez wagi i zsumuj iloczyny.
+            output.add(i,inputPattern.get(i) * neuron.getWeightAtIndex(i));
+            // Dodaj bias. Na obliczonej sumie ważonej dla każdego neuronu w warstwie wyjściowej zastosuj odpowiednią funkcję aktywacji.
+            double neuronOutput = neuron.activate(output);
+            finalOutput.add(i, neuronOutput);
+        }
+
+        return finalOutput;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ////////////////
+
     public List<Double> predict(List<Double> input) {
         List<Double> output = input;
 
@@ -77,31 +127,6 @@ public class NeuralNetwork implements Serializable {
         return network;
     }
 
-    public List<Double> feedForward(List<Double> inputPattern) {
-        List<Double> output = inputPattern;
-
-        // Dla warstw ukrytych
-        for (int i = 0; i < hiddenLayers.length; i++) {
-            List<Double> layerOutput = new ArrayList<>();
-
-            for (int j = 0; j < hiddenLayers[i].length; j++) {
-                Neuron neuron = hiddenLayers[i][j];
-                double neuronOutput = neuron.activate(output);
-                layerOutput.add(j, neuronOutput);
-            }
-            output = layerOutput;
-        }
-
-        // Dla warstwy wyjściowej
-        List<Double> finalOutput = new ArrayList<>();
-        for (int i = 0; i < outputLayer.length; i++) {
-            Neuron neuron = outputLayer[i];
-            double neuronOutput = neuron.activate(output);
-            finalOutput.add(i, neuronOutput);
-        }
-
-        return finalOutput;
-    }
 
 
     public void backPropagation(List<Double> errors) {
