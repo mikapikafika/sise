@@ -74,8 +74,9 @@ public class NeuralNetworkTrainer {
         List<Double> errors = new ArrayList<>();
 
         for (int i = 0; i < output.size(); i++) {
-            errors.add(i, pow(output.get(i) - targetOutput.get(i), 2) / output.size());
+            errors.add(i, pow(targetOutput.get(i) - output.get(i), 2)/2);
         }
+
         return errors;
     }
 
