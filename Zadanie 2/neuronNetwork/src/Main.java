@@ -18,8 +18,6 @@ public class Main {
 
         ResearchResults researchResults = new ResearchResults();
         researchResults.getClassificationResults(reader, neuralNetwork);
-        researchResults.getStats();
-        researchResults.getConfusionMatrix();
     }
 
 }

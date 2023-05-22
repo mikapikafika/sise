@@ -19,6 +19,10 @@ public class NeuralNetworkTrainer {
         this.neuralNetwork = neuralNetwork;
     }
 
+
+    /* Tryby nauczania i testowania */
+
+    // Wykolejony ten train trochę hehe
     public void train(boolean randomOrder, boolean useMomentum) {
         int numTrainingPatterns = data.getInputSize();
         List<Integer> patternOrder = new ArrayList<>();
@@ -46,7 +50,7 @@ public class NeuralNetworkTrainer {
                 List<Double> errors = calculateErrors(output, targetOutput);
 
                 // Propagacja wsteczna
-                neuralNetwork.backPropagation(errors);
+                neuralNetwork.backPropagation(inputPattern, errors, targetOutput);
 
                 // Aktualizacja wag
                 if (useMomentum) {
@@ -63,6 +67,21 @@ public class NeuralNetworkTrainer {
             }
         }
     }
+
+
+    // Obliczanie błędów używane w train()
+    private List<Double> calculateErrors(List<Double> output, List<Double> targetOutput) {
+        List<Double> errors = new ArrayList<>();
+
+        for (int i = 0; i < output.size(); i++) {
+            errors.add(i, pow(output.get(i) - targetOutput.get(i), 2) / output.size());
+        }
+        return errors;
+    }
+
+
+
+    ///////////////
 
     public void test() {
         int numTestingPatterns = data.getTestSize();
@@ -105,15 +124,7 @@ public class NeuralNetworkTrainer {
 
 
 
-    private List<Double> calculateErrors(List<Double> output, List<Double> targetOutput) {
-        List<Double> errors = new ArrayList<>();
-
-        for (int i = 0; i < output.size(); i++) {
-            errors.add(i, pow(targetOutput.get(i) - output.get(i), 2)/2);
-        }
-
-        return errors;
-    }
+    /* Error globalny */
 
     private double calculateGlobalError() {
         int numPatterns = data.getInputSize();
