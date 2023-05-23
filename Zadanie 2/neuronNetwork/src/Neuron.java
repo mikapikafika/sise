@@ -11,6 +11,9 @@ public class Neuron implements Serializable {
     private double bias = 0.0;
     private double output;
 
+
+    /* Inicjalizacja neuronu */
+
     public Neuron(int inputSize) {
         weights = new ArrayList<>();
         initializeRandomWeights(inputSize);
@@ -33,24 +36,40 @@ public class Neuron implements Serializable {
             weights.add(weight);
         }
     }
+
+
+    /* Metody przydatne przy propagacji w przód i wstecznej */
+
     public double activate(List<Double> inputs) {
+        double sum = getWeightedSignalSum(inputs);
+        sum += bias;
+        output = sigmoid(sum);
+        return output;
+    }
+
+    public double getWeightedSignalSum(List<Double> inputs) {
         double sum = 0.0;
         for (int i = 0; i < inputs.size(); i++) {
             sum += inputs.get(i) * weights.get(i);
         }
-        sum += bias;
-        output = sigmoid(sum);
-
-        return output;
-    }
-
-    public double getWeightAtIndex(int index) {
-        return weights.get(index);
+        return sum;
     }
 
 
+    /* Funkcja sigmoidalna i jej pochodna */
 
-    ///////////////
+    private double sigmoid(double x) {
+        return 1 / (1 + Math.exp(-x));
+    }
+
+    public double derivativeActivationFunction(double x) {
+        return sigmoid(x) * (1 - sigmoid(x));
+    }
+
+
+
+    ///////////////////
+
 
 
     public void updateWeightsWithMomentum(double learningRate, double momentum) {
@@ -87,15 +106,10 @@ public class Neuron implements Serializable {
         this.error = error * derivativeActivationFunction(output);
     }
 
-    private double sigmoid(double x) {
-        return 1 / (1 + Math.exp(-x));
+
+    public double getWeightAtIndex(int index) {
+        return weights.get(index);
     }
-
-    private double derivativeActivationFunction(double x) {
-        return sigmoid(x) * (1 - sigmoid(x));
-    }
-
-
 
 
     public void setWeights(List<Double> weights) {

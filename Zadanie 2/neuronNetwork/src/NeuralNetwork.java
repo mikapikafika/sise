@@ -1,15 +1,23 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class NeuralNetwork implements Serializable {
     private Neuron[][] hiddenLayers;
     private Neuron[] outputLayer;
 
+    private double[] outputLayerGradient;
+    private double[] hiddenLayerGradient;
+
+    /* Inicjalizacja warstw */
+
     //Kiedy tworzymy sieć, hiddenSizes musimy podać jako, np. {4, 2}, czyli pierwsza warstwa ukryta składa się z 4, a druga z 2 neuronów
     public NeuralNetwork(int inputSize, int[] hiddenSizes, int outputSize) {
         hiddenLayers = new Neuron[hiddenSizes.length][];
         outputLayer = new Neuron[outputSize];
+        outputLayerGradient = new double[outputSize];
+        hiddenLayerGradient = new double[hiddenSizes.length];
 
         // Inicjalizacja warstw ukrytych
         for (int i = 0; i < hiddenSizes.length; i++) {
@@ -33,24 +41,26 @@ public class NeuralNetwork implements Serializable {
     }
 
 
+    /* Główne metody */
+
     public List<Double> feedForward(List<Double> inputPattern) {
         // Dla każdego neuronu w warstwie, oblicz sumę ważoną poprzez pomnożenie wartości wejściowych przez odpowiadające im wagi i zsumowanie tych iloczynów
         // Następnie dodaj bias (przesunięcie) do obliczonej sumy ważonej i zastosuj funkcję aktywacji (wszystko dzieje się w activate)
         List<Double> output = inputPattern;
 
-        // Dla warstw ukrytych
+        // WARSTWY UKRYTE
         for (int i = 0; i < hiddenLayers.length; i++) {
             List<Double> layerOutput = new ArrayList<>();
 
             for (int j = 0; j < hiddenLayers[i].length; j++) {
                 Neuron neuron = hiddenLayers[i][j];
                 double neuronOutput = neuron.activate(output);
-                layerOutput.add(j, neuronOutput);
+                layerOutput .add(j, neuronOutput);
             }
             output = layerOutput;
         }
 
-        // Dla warstwy wyjściowej
+        // WARSTWA WYJŚCIOWA
         List<Double> finalOutput = new ArrayList<>();
         for (int i = 0; i < outputLayer.length; i++) {
             Neuron neuron = outputLayer[i];
@@ -58,71 +68,10 @@ public class NeuralNetwork implements Serializable {
             finalOutput.add(i, neuronOutput);
         }
 
-        System.out.println("rezultat propagacji w przód: " + finalOutput);
+//        System.out.println("rezultat propagacji w przód: " + finalOutput);
 
         return finalOutput;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ////////////////
-
-    public List<Double> predict(List<Double> input) {
-        List<Double> output = input;
-
-        // Obliczanie wyjścia dla warstw ukrytych
-        for (Neuron[] hiddenLayer : hiddenLayers) {
-            output = calculateLayerOutput(output, hiddenLayer);
-
-            // Obliczanie wyjścia dla warstwy wyjściowej
-            output = calculateLayerOutput(output, outputLayer);
-        }
-        return output;
-    }
-
-    private List<Double> calculateLayerOutput(List<Double> input, Neuron[] layer) {
-        List<Double> output = new ArrayList<>();
-        for (int i = 0; i < layer.length; i++) {
-            output.set(i, layer[i].activate(input));
-        }
-        return output;
-    }
-
-    public void saveToFile(String filePath)
-    {
-        try {
-            FileOutputStream fileOut = new FileOutputStream(filePath);
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            objectOut.writeObject(this);
-            objectOut.close();
-            fileOut.close();
-            System.out.println("Sieć neuronowa została zapisana do pliku.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static NeuralNetwork loadFromFile(String filePath) throws IOException, ClassNotFoundException {
-        FileInputStream fileIn = new FileInputStream(filePath);
-        ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-        NeuralNetwork network = (NeuralNetwork) objectIn.readObject();
-        objectIn.close();
-        fileIn.close();
-        System.out.println("Sieć neuronowa została wczytana z pliku.");
-        return network;
-    }
-
-
 
     public void backPropagation(List<Double> errors) {
         // Dla warstwy wyjściowej
@@ -159,7 +108,124 @@ public class NeuralNetwork implements Serializable {
         }
     }
 
-    // Nie wiem czy nie trzeba uwzględnić gradientu licząc wagę z momentum dlatego skip implementacji w klasie Neuron - momentum jest stałe więc chyba ni
+    /* PRÓBA INACZEJ: */
+
+    // JAK WYKORZYSTAC ERRORS - nie działa ofc bo trzeba dla ukrytych ogarnąć i przetestować
+//    public void backPropagation(List<Double> inputPattern, List<Double> errors, List<Double> targetOutput) {
+//
+//        // WARSTWA WYJŚCIOWA
+//        /* Dla każdego neuronu w warstwie wyjściowej o indeksie i obliczamy błąd wyjścia: delta_i = (y_i - t_i) * f'(z_i),
+//        gdzie y_i to wartość wyjściowa neuronu, t_i to oczekiwana wartość wyjściowa, f'() to pochodna funkcji aktywacji,
+//        a z_i to ważona suma sygnałów dla tego neuronu.
+//         */
+//        for (int i = 0; i < outputLayer.length; i++) {
+//            // tyle zmiennych dla czytelności
+//            Neuron neuron = outputLayer[i];
+//            double weightedSignalSum = neuron.getWeightedSignalSum(inputPattern);                           // z_i
+//            double derivative = neuron.derivativeActivationFunction(weightedSignalSum);                     // f'(z_i)
+//            outputLayerGradient[i] = (calculateLayerOutput(inputPattern, outputLayer).get(i) - targetOutput.get(i)) * derivative;         // delta_i = (y_i - t_i) * f'(z_i), hubert ma jeszcze coś
+//        }
+//        System.out.println("Błąd wyjścia: " + Arrays.toString(outputLayerGradient));
+//
+//
+//        // WARSTWY UKRYTE
+//        /* Dla każdej warstwy ukrytej (zaczynając od ostatniej) obliczamy błąd dla każdego neuronu:
+//        Dla neuronu o indeksie j w warstwie ukrytej o indeksie l obliczamy błąd: delta_j = f'(z_j) * sum(w_ji * delta_i),
+//        gdzie f'() to pochodna funkcji aktywacji, z_j to ważona suma sygnałów dla tego neuronu, w_ji to waga połączenia
+//        między neuronem j a neuronem i w kolejnej warstwie, a delta_i to błąd dla neuronu i w kolejnej warstwie.
+//         */
+//        for (int i = hiddenLayers.length - 1; i >= 0; i--) {
+//            Neuron[] hiddenNeurons = hiddenLayers[i];
+//            Neuron[] nextHiddenNeurons = hiddenLayers[i + 1];
+//
+//            if (i + 1 < hiddenLayers.length) {
+//                for (int j = 0; j < hiddenNeurons.length; j++) {
+//                    Neuron neuron = hiddenNeurons[j];
+//                    double weightedSignalSum = neuron.getWeightedSignalSum(inputPattern);                   // z_j
+//                    double derivative = neuron.derivativeActivationFunction(weightedSignalSum);             // f'(z_j)
+//                    hiddenLayerGradient[i] = (calculateLayerOutput(inputPattern, hiddenNeurons).get(i) - targetOutput.get(i));   // i coś tam dalej
+//
+//                }
+//            } else {
+//                for (int j = 0; j < hiddenLayers.length; j++) {
+//                    // jest to ostatnia ukryta warstwa i liczymy inaczej... i guess? nie dotarlam
+//                }
+//            }
+//        }
+//    }
+
+
+
+    public List<Double> predict(List<Double> input) {
+        List<Double> output = input;
+
+        // Obliczanie wyjścia dla warstw ukrytych
+        for (Neuron[] hiddenLayer : hiddenLayers) {
+            output = calculateLayerOutput(output, hiddenLayer);
+
+            // Obliczanie wyjścia dla warstwy wyjściowej
+            output = calculateLayerOutput(output, outputLayer);
+        }
+        return output;
+    }
+
+    private List<Double> calculateLayerOutput(List<Double> input, Neuron[] layer) {
+        List<Double> output = new ArrayList<>();
+        for (int i = 0; i < layer.length; i++) {
+            output.set(i, layer[i].activate(input));
+        }
+        return output;
+    }
+
+
+
+
+
+
+
+    /* Obsługa plików */
+
+    public void saveToFile(String filePath) {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(filePath);
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(this);
+            objectOut.close();
+            fileOut.close();
+            System.out.println("Sieć neuronowa została zapisana do pliku.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static NeuralNetwork loadFromFile(String filePath) throws IOException, ClassNotFoundException {
+        FileInputStream fileIn = new FileInputStream(filePath);
+        ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+        NeuralNetwork network = (NeuralNetwork) objectIn.readObject();
+        objectIn.close();
+        fileIn.close();
+        System.out.println("Sieć neuronowa została wczytana z pliku.");
+        return network;
+    }
+
+
+
+
+
+
+    ////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void updateWeightsWithMomentum(double learningRate, double momentum) {
 
@@ -192,6 +258,10 @@ public class NeuralNetwork implements Serializable {
             neuron.updateWeights(learningRate);
         }
     }
+
+
+
+    /* Metody do statystyk, na razie zostawiam */
 
     public String getOutputWeights() {
         List<List<Double>> outputWeights = new ArrayList<>();

@@ -20,7 +20,7 @@ public class ResearchResults {
     // a wewnetrzna dla klas
     // expectedoutputs no to to samo ale oczekiwane
 
-    // A tylko skapnelam sie ze mamy np metode calculateLayerOutput, predict itd i w sumie mozna jej i podobnych tu uzyc ale ide spac
+    // A tylko skapnelam sie ze mamy np metode calculateLayerOutput, predict itd i w sumie mozna jej i podobnych tu uzyc
 
     public void getClassificationResults(DataReader data, NeuralNetwork neuralNetwork) {
         int numPatterns = data.getInputSize();
@@ -35,6 +35,8 @@ public class ResearchResults {
             outputs.add(output);
             expectedOutputs.add(targetOutput);
         }
+        getStats();
+        getConfusionMatrix();
     }
 
 
