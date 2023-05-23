@@ -68,94 +68,91 @@ public class NeuralNetwork implements Serializable {
             finalOutput.add(i, neuronOutput);
         }
 
-        System.out.println("rezultat propagacji w przód: " + finalOutput);
+//        System.out.println("rezultat propagacji w przód: " + finalOutput);
 
         return finalOutput;
     }
 
-//    public void backPropagation(List<Double> output, List<Double> targetOutput, List<Double> errors) {
-//
-//        // WARSTWA WYJŚCIOWA
-//        for (int i = 0; i < outputLayer.length; i++) {
-//            for (int j = 0; j < outputLayer.length; j++) {
-//                outputLayerGradient[i][j] = output.get(i) - targetOutput.get(i);
-//            }
-//        }
-//
-//
-//        // Dla warstw ukrytych
-//        for (int i = hiddenLayers.length - 1; i >= 0; i--) {
-//            Neuron[] hiddenLayer = hiddenLayers[i];
-//            List<Double> nextLayerErrors = new ArrayList<>();
-//
-//            if (i + 1 < hiddenLayers.length) {
-//                List<Neuron> nextLayerNeurons = List.of(hiddenLayers[i + 1]);
-//                nextLayerErrors.clear();
-//
-//                for (int j = 0; j < hiddenLayer.length; j++) {
-//                    double errorSum = 0.0;
-//
-//                    for (Neuron nextLayerNeuron : nextLayerNeurons) {
-//                        errorSum += nextLayerNeuron.getWeightAtIndex(j) * nextLayerNeuron.getError();
-//                    }
-//
-//                    nextLayerErrors.add(errorSum);
-//                    hiddenLayer[j].calculateError(nextLayerErrors.get(j)); // Retrieve error from nextLayerErrors
-//                }
-//            } else {
-//                for (int j = 0; j < hiddenLayer.length; j++) {
-//                    double errorSum = 0.0;
-//                    hiddenLayer[j].calculateError(errorSum);
-//                }
-//            }
-//        }
-//    }
-
-
-
-    // JAK WYKORZYSTAC ERRORS - nie działa ofc bo trzeba dla ukrytych ogarnąć i przetestować
-    public void backPropagation(List<Double> inputPattern, List<Double> errors, List<Double> targetOutput) {
-
-        // WARSTWA WYJŚCIOWA
-        /* Dla każdego neuronu w warstwie wyjściowej o indeksie i obliczamy błąd wyjścia: delta_i = (y_i - t_i) * f'(z_i),
-        gdzie y_i to wartość wyjściowa neuronu, t_i to oczekiwana wartość wyjściowa, f'() to pochodna funkcji aktywacji,
-        a z_i to ważona suma sygnałów dla tego neuronu.
-         */
+    public void backPropagation(List<Double> errors) {
+        // Dla warstwy wyjściowej
         for (int i = 0; i < outputLayer.length; i++) {
-            // tyle zmiennych dla czytelności
-            Neuron neuron = outputLayer[i];
-            double weightedSignalSum = neuron.getWeightedSignalSum(inputPattern);                           // z_i
-            double derivative = neuron.derivativeActivationFunction(weightedSignalSum);                     // f'(z_i)
-            outputLayerGradient[i] = (calculateLayerOutput(inputPattern, outputLayer).get(i) - targetOutput.get(i)) * derivative;         // delta_i = (y_i - t_i) * f'(z_i), hubert ma jeszcze coś
+            outputLayer[i].calculateError(errors.get(i));
         }
-        System.out.println("Błąd wyjścia: " + Arrays.toString(outputLayerGradient));
 
 
-        // WARSTWY UKRYTE
-        /* Dla każdej warstwy ukrytej (zaczynając od ostatniej) obliczamy błąd dla każdego neuronu:
-        Dla neuronu o indeksie j w warstwie ukrytej o indeksie l obliczamy błąd: delta_j = f'(z_j) * sum(w_ji * delta_i),
-        gdzie f'() to pochodna funkcji aktywacji, z_j to ważona suma sygnałów dla tego neuronu, w_ji to waga połączenia
-        między neuronem j a neuronem i w kolejnej warstwie, a delta_i to błąd dla neuronu i w kolejnej warstwie.
-         */
+        // Dla warstw ukrytych
         for (int i = hiddenLayers.length - 1; i >= 0; i--) {
-            Neuron[] hiddenNeurons = hiddenLayers[i];
-            Neuron[] nextHiddenNeurons = hiddenLayers[i + 1];
+            Neuron[] hiddenLayer = hiddenLayers[i];
+            List<Double> nextLayerErrors = new ArrayList<>();
 
             if (i + 1 < hiddenLayers.length) {
-                for (int j = 0; j < hiddenNeurons.length; j++) {
-                    Neuron neuron = hiddenNeurons[j];
-                    double weightedSignalSum = neuron.getWeightedSignalSum(inputPattern);                   // z_j
-                    double derivative = neuron.derivativeActivationFunction(weightedSignalSum);             // f'(z_j)
-                    hiddenLayerGradient[i] = (calculateLayerOutput(inputPattern, hiddenNeurons).get(i) - targetOutput.get(i));   // i coś tam dalej
+                List<Neuron> nextLayerNeurons = List.of(hiddenLayers[i + 1]);
+                nextLayerErrors.clear();
 
+                for (int j = 0; j < hiddenLayer.length; j++) {
+                    double errorSum = 0.0;
+
+                    for (Neuron nextLayerNeuron : nextLayerNeurons) {
+                        errorSum += nextLayerNeuron.getWeightAtIndex(j) * nextLayerNeuron.getError();
+                    }
+
+                    nextLayerErrors.add(errorSum);
+                    hiddenLayer[j].calculateError(nextLayerErrors.get(j)); // Retrieve error from nextLayerErrors
                 }
             } else {
-                for (int j = 0; j < hiddenLayers.length; j++) {
-                    // jest to ostatnia ukryta warstwa i liczymy inaczej... i guess? nie dotarlam
+                for (int j = 0; j < hiddenLayer.length; j++) {
+                    double errorSum = 0.0;
+                    hiddenLayer[j].calculateError(errorSum);
                 }
             }
         }
     }
+
+    /* PRÓBA INACZEJ: */
+
+    // JAK WYKORZYSTAC ERRORS - nie działa ofc bo trzeba dla ukrytych ogarnąć i przetestować
+//    public void backPropagation(List<Double> inputPattern, List<Double> errors, List<Double> targetOutput) {
+//
+//        // WARSTWA WYJŚCIOWA
+//        /* Dla każdego neuronu w warstwie wyjściowej o indeksie i obliczamy błąd wyjścia: delta_i = (y_i - t_i) * f'(z_i),
+//        gdzie y_i to wartość wyjściowa neuronu, t_i to oczekiwana wartość wyjściowa, f'() to pochodna funkcji aktywacji,
+//        a z_i to ważona suma sygnałów dla tego neuronu.
+//         */
+//        for (int i = 0; i < outputLayer.length; i++) {
+//            // tyle zmiennych dla czytelności
+//            Neuron neuron = outputLayer[i];
+//            double weightedSignalSum = neuron.getWeightedSignalSum(inputPattern);                           // z_i
+//            double derivative = neuron.derivativeActivationFunction(weightedSignalSum);                     // f'(z_i)
+//            outputLayerGradient[i] = (calculateLayerOutput(inputPattern, outputLayer).get(i) - targetOutput.get(i)) * derivative;         // delta_i = (y_i - t_i) * f'(z_i), hubert ma jeszcze coś
+//        }
+//        System.out.println("Błąd wyjścia: " + Arrays.toString(outputLayerGradient));
+//
+//
+//        // WARSTWY UKRYTE
+//        /* Dla każdej warstwy ukrytej (zaczynając od ostatniej) obliczamy błąd dla każdego neuronu:
+//        Dla neuronu o indeksie j w warstwie ukrytej o indeksie l obliczamy błąd: delta_j = f'(z_j) * sum(w_ji * delta_i),
+//        gdzie f'() to pochodna funkcji aktywacji, z_j to ważona suma sygnałów dla tego neuronu, w_ji to waga połączenia
+//        między neuronem j a neuronem i w kolejnej warstwie, a delta_i to błąd dla neuronu i w kolejnej warstwie.
+//         */
+//        for (int i = hiddenLayers.length - 1; i >= 0; i--) {
+//            Neuron[] hiddenNeurons = hiddenLayers[i];
+//            Neuron[] nextHiddenNeurons = hiddenLayers[i + 1];
+//
+//            if (i + 1 < hiddenLayers.length) {
+//                for (int j = 0; j < hiddenNeurons.length; j++) {
+//                    Neuron neuron = hiddenNeurons[j];
+//                    double weightedSignalSum = neuron.getWeightedSignalSum(inputPattern);                   // z_j
+//                    double derivative = neuron.derivativeActivationFunction(weightedSignalSum);             // f'(z_j)
+//                    hiddenLayerGradient[i] = (calculateLayerOutput(inputPattern, hiddenNeurons).get(i) - targetOutput.get(i));   // i coś tam dalej
+//
+//                }
+//            } else {
+//                for (int j = 0; j < hiddenLayers.length; j++) {
+//                    // jest to ostatnia ukryta warstwa i liczymy inaczej... i guess? nie dotarlam
+//                }
+//            }
+//        }
+//    }
 
 
 

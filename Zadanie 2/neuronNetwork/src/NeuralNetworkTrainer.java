@@ -50,7 +50,8 @@ public class NeuralNetworkTrainer {
                 List<Double> errors = calculateErrors(output, targetOutput);
 
                 // Propagacja wsteczna
-                neuralNetwork.backPropagation(inputPattern, errors, targetOutput);
+//                neuralNetwork.backPropagation(inputPattern, errors, targetOutput);
+                neuralNetwork.backPropagation(errors);
 
                 // Aktualizacja wag
                 if (useMomentum) {
