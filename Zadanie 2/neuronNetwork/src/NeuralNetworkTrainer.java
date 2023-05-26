@@ -8,7 +8,7 @@ import static java.lang.Math.pow;
 public class NeuralNetworkTrainer {
     private static final double LEARNING_RATE = 0.1;
     private static final double MOMENTUM_FACTOR = 0.9;
-    private static final int MAX_EPOCHS = 50;
+    private static final int MAX_EPOCHS = 1000000;
 
 
     private DataReader data;
@@ -48,13 +48,21 @@ public class NeuralNetworkTrainer {
                 List<Double> output = neuralNetwork.feedForward(inputPattern);
 
                 // Obliczenie błędów
-                List<Double> errors = calculateErrors(output, targetOutput);
+                List<Double> cost = calculateError(output, targetOutput);
+                for(int s = 0; s < neuralNetwork.getOutputSize(); s++)
+                {
+                    if(cost.get(s) <= 0.00001){
+                        System.out.println(epoch);
+                        return;
+                    }
+
+                }
 //                Błąd średniokwadratowy dla jednego wzorca
-                double exampleError = calculateExampleError(errors);
+                double exampleError = calculateExampleError(cost);
 
                 // Propagacja wsteczna
 //                neuralNetwork.backPropagation(inputPattern, errors, targetOutput);
-                neuralNetwork.backPropagation(errors);
+                neuralNetwork.backPropagation(cost);
 
                 // Aktualizacja wag
                 if (useMomentum) {
@@ -73,11 +81,14 @@ public class NeuralNetworkTrainer {
     }
 
 
+
     // Obliczanie błędów używane w train()
-    private List<Double> calculateErrors(List<Double> output, List<Double> targetOutput) {
+    private List<Double> calculateError(List<Double> output, List<Double> targetOutput) {
         List<Double> errors = new ArrayList<>();
 
         for (int i = 0; i < output.size(); i++) {
+//            System.out.println(targetOutput.get(i));
+//            System.out.println(output.get(i));
             errors.add(i, pow(targetOutput.get(i) - output.get(i), 2)/2);
         }
         return errors;
@@ -118,7 +129,7 @@ public class NeuralNetworkTrainer {
                 List<Double> output = neuralNetwork.feedForward(inputPattern);
 
                 // Obliczenie błędów
-                List<Double> errors = calculateErrors(output, targetOutput);
+                List<Double> errors = calculateError(output, targetOutput);
 
                 // Rejestrowanie wartości do pliku
                 bufferedWriter.write("Wzorzec wejściowy: " + inputPattern.toString() + "\n");

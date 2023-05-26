@@ -68,9 +68,11 @@ public class NeuralNetwork implements Serializable {
     }
 
     public void backPropagation(List<Double> errors) {
+
         // Dla warstwy wyjściowej
         for (int i = 0; i < outputLayer.length; i++) {
             outputLayer[i].calculateNeuronError(errors.get(i));
+            //System.out.println("Błąd " + i+" neuronu warstwy wyjściowej: " + outputLayer[i].getError());
         }
 
         // Dla warstw ukrytych
@@ -97,16 +99,13 @@ public class NeuralNetwork implements Serializable {
                     double errorSum = 0.0;
                     for(int k = 0; k < outputLayer.length; k++ )
                     {
-                        for(int c = 0; c < outputLayer[k].getWeightNum(); c++)
-                        {
-                            errorSum += outputLayer[k].getWeightAtIndex(c) * outputLayer[k].getError();
-                        }
+                        errorSum += outputLayer[k].getWeightAtIndex(j) * outputLayer[k].getError();
                     }
                     nextLayerErrors.add(errorSum);
                     hiddenLayer[j].calculateNeuronError(nextLayerErrors.get(j));
                     //System.out.println("Błąd " + j+" neuronu warstwy ukrytej: " + hiddenLayer[j].getError());
-                   // System.out.println('\n');
                 }
+                //System.out.println('\n');
             }
         }
     }
@@ -252,11 +251,11 @@ public class NeuralNetwork implements Serializable {
         for (int i = hiddenLayers.length - 1; i >= 0; i--) {
             Neuron[] currentLayer = hiddenLayers[i];
             for (Neuron neuron : currentLayer) {
-                System.out.println("Błąd neuronu ukrytego: " +neuron.getError());
+                //System.out.println("Błąd neuronu ukrytego: " +neuron.getError());
                 neuron.updateWeights(learningRate);
             }
         }
-        System.out.println("\n\n\n");
+
         // Dla warstwy wyjściowej
         for (Neuron neuron : outputLayer) {
             neuron.updateWeights(learningRate);

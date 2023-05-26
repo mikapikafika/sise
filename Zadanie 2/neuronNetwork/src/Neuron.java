@@ -69,8 +69,8 @@ public class Neuron implements Serializable {
     }
 
     public double derivativeActivationFunction(double x) {
-        //return sigmoid(x) * (1 - sigmoid(x));
-        return Math.exp(-x)/pow((1+Math.exp(-x)),2);
+        return sigmoid(x) * (1 - sigmoid(x));
+        //return Math.exp(-x)/pow((1+Math.exp(-x)),2);
     }
 
 
@@ -99,13 +99,13 @@ public class Neuron implements Serializable {
 
         for (int i = 0; i < weights.size(); i++) {
             double gradient = learningRate * error * output;
-            System.out.println("Gradient: "+gradient);
+            //System.out.println("Gradient: "+gradient);
 //            double weightChange = gradient + tempWeightChanges.get(i);
 //            System.out.println("Zmiana: "+weightChange);
 //            double newWeight = weights.get(i) - weightChange;
-            System.out.println("Stara waga: "+weights.get(i));
+           // System.out.println("Stara waga: "+weights.get(i));
             double newWeight = weights.get(i) - gradient;
-            System.out.println("Nowa waga: "+newWeight);
+            //System.out.println("Nowa waga: "+newWeight);
             weights.set(i, newWeight);
 //            lastWeightChanges.set(i, weightChange);
            // System.out.println("\n");
@@ -116,7 +116,11 @@ public class Neuron implements Serializable {
     }
 
     public void calculateNeuronError(double error) {
+//        System.out.println("błąd: "+error);
+//        System.out.println("pochodna: "+derivativeActivationFunction(output));
+//        System.out.println("wyjście: "+output);
         this.error = error * derivativeActivationFunction(output);
+        //System.out.println("nowy błąd: "+error);
     }
 
 
