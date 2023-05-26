@@ -10,14 +10,15 @@ public class Main {
 
         NeuralNetwork neuralNetwork = new NeuralNetwork(inputSize, hiddenSizes, outputSize);
         DataReader reader = new DataReader();
-        reader.loadTrainingDataFromFile("C:\\Studia\\sem4\\sise\\SISE\\Zadanie 2\\neuronNetwork\\iris.txt", 0.8);
+        //reader.loadTrainingDataFromFile("C:\\Studia\\sem4\\sise\\SISE\\Zadanie 2\\neuronNetwork\\iris.txt", 0.8);
         //reader.loadTrainingDataFromFile("C:\\\\Studia\\\\SISE\\\\Zadanie 2\\\\Irysy\\\\iris.txt", 0.8);
+        reader.loadTrainingDataFromFile("H:\\GitRepositories\\SISE\\Zadanie 2\\Irysy\\iris.txt", 0.8);
         NeuralNetworkTrainer train = new NeuralNetworkTrainer(reader, neuralNetwork);
-        train.train(false,false);   //aaaaaaaaaaaaaaa
+        train.train(true,false);
         train.test();
 
-        ResearchResults researchResults = new ResearchResults();
-        researchResults.getClassificationResults(reader, neuralNetwork);
+//        ResearchResults researchResults = new ResearchResults();
+//        researchResults.getClassificationResults(reader, neuralNetwork);
     }
 
 }

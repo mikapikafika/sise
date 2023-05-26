@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.Math.pow;
+
 public class Neuron implements Serializable {
     private List<Double> weights;
     private double error;
@@ -55,6 +57,10 @@ public class Neuron implements Serializable {
         return sum;
     }
 
+    public int getWeightNum(){
+         return weights.size();
+    }
+
 
     /* Funkcja sigmoidalna i jej pochodna */
 
@@ -63,7 +69,8 @@ public class Neuron implements Serializable {
     }
 
     public double derivativeActivationFunction(double x) {
-        return sigmoid(x) * (1 - sigmoid(x));
+        //return sigmoid(x) * (1 - sigmoid(x));
+        return Math.exp(-x)/pow((1+Math.exp(-x)),2);
     }
 
 
@@ -92,17 +99,23 @@ public class Neuron implements Serializable {
 
         for (int i = 0; i < weights.size(); i++) {
             double gradient = learningRate * error * output;
-            double weightChange = gradient + tempWeightChanges.get(i);
-            double newWeight = weights.get(i) - weightChange;
+            System.out.println("Gradient: "+gradient);
+//            double weightChange = gradient + tempWeightChanges.get(i);
+//            System.out.println("Zmiana: "+weightChange);
+//            double newWeight = weights.get(i) - weightChange;
+            System.out.println("Stara waga: "+weights.get(i));
+            double newWeight = weights.get(i) - gradient;
+            System.out.println("Nowa waga: "+newWeight);
             weights.set(i, newWeight);
-            lastWeightChanges.set(i, weightChange);
+//            lastWeightChanges.set(i, weightChange);
+           // System.out.println("\n");
 
 //            System.out.println("Zmiana wagi dla wagi " + i + ": " + weightChange);
 //            System.out.println("Zmieniona waga " + i + ": " + weights.get(i));
         }
     }
 
-    public void calculateError(double error) {
+    public void calculateNeuronError(double error) {
         this.error = error * derivativeActivationFunction(output);
     }
 

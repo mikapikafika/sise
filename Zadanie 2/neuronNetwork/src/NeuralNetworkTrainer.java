@@ -8,11 +8,12 @@ import static java.lang.Math.pow;
 public class NeuralNetworkTrainer {
     private static final double LEARNING_RATE = 0.1;
     private static final double MOMENTUM_FACTOR = 0.9;
-    private static final int MAX_EPOCHS = 100;
+    private static final int MAX_EPOCHS = 50;
 
 
     private DataReader data;
     private NeuralNetwork neuralNetwork; // Obiekt sieci neuronowej
+
 
     public NeuralNetworkTrainer(DataReader data, NeuralNetwork neuralNetwork) {
         this.data = data;
@@ -48,6 +49,8 @@ public class NeuralNetworkTrainer {
 
                 // Obliczenie błędów
                 List<Double> errors = calculateErrors(output, targetOutput);
+//                Błąd średniokwadratowy dla jednego wzorca
+                double exampleError = calculateExampleError(errors);
 
                 // Propagacja wsteczna
 //                neuralNetwork.backPropagation(inputPattern, errors, targetOutput);
@@ -77,8 +80,18 @@ public class NeuralNetworkTrainer {
         for (int i = 0; i < output.size(); i++) {
             errors.add(i, pow(targetOutput.get(i) - output.get(i), 2)/2);
         }
-
         return errors;
+    }
+
+    private Double calculateExampleError(List<Double> errors)
+    {
+        double exError = 0.0;
+        for (int i = 0; i < errors.size(); i++)
+        {
+            exError+=errors.get(i);
+        }
+        exError = exError/errors.size();
+        return exError;
     }
 
 
