@@ -11,6 +11,7 @@ public class NeuralNetwork {
     private int hiddenNeurons;
     private int outputNeurons;
 
+
     public NeuralNetwork(double learningRate, double momentum, int inputNeurons, int hiddenNeurons, int outputNeurons) {
         this.learningRate = learningRate;
         this.momentum = momentum;
@@ -25,15 +26,14 @@ public class NeuralNetwork {
         hiddenLayerWeights.randomizeValues();
     }
 
-    public void train(DataReader data)
+    public void train(double[] input, double[] targetOutput)
     {
 //        Propagacja w przód
 //        Obliczenia w warstwie ukrytej
-        Matrix input = new Matrix();
-        input = input.createFromInput(data);
+        Matrix inputMatrix = new Matrix();
+        inputMatrix = inputMatrix.createFromInput(input);
         Matrix hidden = new Matrix();
-        hidden = hidden.multiply(hiddenLayerWeights, input);
-        biasH.display();
+        hidden = hidden.multiply(hiddenLayerWeights, inputMatrix);
         Matrix tempWeight = hiddenLayerWeights;
 //        Jeżeli używamy biasu, kod dodaje wartość 1 do wartości neuronów ukrytych
         if(BiasHidden)

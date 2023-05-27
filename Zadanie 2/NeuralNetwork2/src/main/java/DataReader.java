@@ -3,17 +3,13 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class DataReader {
-    private List<List<Double>> inputs;
-    private List<List<Double>> outputs;
+    private List<double[][]> trainingData;
 
-    private List<List<Double>> testInputs;
-    private List<List<Double>> testOutputs;
+    private List<double[]> testingData;
 
     public DataReader() {
-        inputs = new ArrayList<>();
-        outputs = new ArrayList<>();
-        testOutputs = new ArrayList<>();
-        testInputs = new ArrayList<>();
+        trainingData = new ArrayList<>();
+        testingData = new ArrayList<>();
     }
 
     //trainingRatio to stosunek ilości wzorców treningowych do wszystkich danych
@@ -21,92 +17,69 @@ public class DataReader {
         File file = new File(filePath);
         Scanner scanner = new Scanner(file);
 
-        List<String[]> data = new ArrayList<>();
+        List<double[][]> data = new ArrayList<>();
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            String[] values = line.split(",");
-            data.add(values);
+            List<String> values = List.of(line.split(","));
+
+            double[] input = new double[values.size() - 1];
+            for (int j = 0; j < input.length; j++) {
+                input[j] = Double.parseDouble(values.get(j));
+            }
+            double[] output;
+            if(values.get(values.size() - 1).equals("Iris-setosa")) {
+                output = new double[] { 1.0, 0.0, 0.0 };
+            } else if (values.get(values.size() - 1).equals("Iris-versicolor")) {
+                output = new double[] { 0.0, 1.0, 0.0 };
+            } else if (values.get(values.size() - 1).equals("Iris-virginica")) {
+                output = new double[] { 0.0, 0.0, 1.0 };
+            }
+            else break;
+            double[][] object = new double[][] { input, output };
+            data.add(object);
         }
-        //Odejmujemy ostatnią linię, która jest pusta
-        int index = data.size() - 1;
-        data.remove(index);
 
         int totalSize = data.size();
         int trainingSize = (int) (totalSize * trainingRatio);
 
+
         //Losowo wybieramy zestaw danych i usuwamy z głównej listy.
         Random random = new Random();
-        while (data.size() > 0) {
+        while (data.size() > trainingSize) {
             int randomIndex = random.nextInt(data.size());
-            String[] values = data.remove(randomIndex);
-
-            List<Double> input = new ArrayList<>();
-            //Wyjście w postaci tablicy trzech double - każdy dla jednej klasy kwiatka
-            List<Double> output = new ArrayList<>();
-
-            //Przypisanie usuniętej z data wartości do danych wejściowych
-            for (int i = 0; i < values.length - 1; i++) {
-                input.add(i, Double.parseDouble(values[i]));
-            }
-
-            //Ustanowienie wzorca wyjścia
-            String className = values[values.length - 1];
-            if (className.equals("Iris-setosa")) {
-                output.add(0, 1.0);
-                output.add(1, 0.0);
-                output.add(2, 0.0);
-            } else if (className.equals("Iris-versicolor")) {
-                output.add(0, 0.0);
-                output.add(1, 1.0);
-                output.add(2, 0.0);
-            } else if (className.equals("Iris-virginica")) {
-                output.add(0, 0.0);
-                output.add(1, 0.0);
-                output.add(2, 1.0);
-            }
-
+            double[][] values = data.remove(randomIndex);
             //Sprawdza, czy liczba wczytanych danych jest mniejsza trainingSize. Jeśli tak, to wzorzec
             // zostaje dodany do zbioru treningowego. W przeciwnym razie wzorzec zostaje dodany do zbioru testowego
-            if (data.size() < trainingSize) {
-                addTrainingExample(input, output);
+            if (data.size() > trainingSize) {
+                addTrainingExample(values);
             } else {
-                addTestExample(input, output);
+                double[] testvalue = values[1];
+                addTestExample(testvalue);
             }
         }
 
         scanner.close();
     }
 
-    public void addTrainingExample(List<Double> input, List<Double> output) {
-        inputs.add(input);
-        outputs.add(output);
+    public void addTrainingExample(double[][] trainData) {
+        trainingData.add(trainData);
     }
 
-    public void addTestExample(List<Double> input, List<Double> output) {
-        testInputs.add(input);
-        testOutputs.add(output);
+    public void addTestExample(double[] testData) {
+        testingData.add(testData);
     }
 
-    public List<Double> getInput(int index) {
-        return inputs.get(index);
+    public List<double[][]> getTrainingData() {
+        return trainingData;
     }
 
-    public List<Double> getOutput(int index) {
-        return outputs.get(index);
+    public List<double[]> getTestingData() {
+        return testingData;
     }
-
-    public int getInputSize() {
-        return inputs.size();
+    public int getTrainingDataSize(){
+        return trainingData.size();
     }
-    public int getTestSize() {
-        return testInputs.size();
+    public int getTestingDataSize(){
+        return testingData.size();
     }
-
-    public List<Double> getTestInput(int index) {
-        return testInputs.get(index);
-    }
-    public List<Double> getTestOutput(int index) {
-        return testOutputs.get(index);
-    }
-
 }

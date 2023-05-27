@@ -25,33 +25,21 @@ public class Matrix implements Cloneable{
         }
     }
 
-    public static Matrix createFromInput(DataReader dataReader) {
-        int rowNum = dataReader.getInputSize();
-        int colNum = dataReader.getInput(0).size();
-
-        Matrix matrix = new Matrix(rowNum, colNum);
-
+    public static Matrix createFromInput(double[] input) {
+        int rowNum = input.length;
+        Matrix matrix = new Matrix(rowNum, 1);
         for (int i = 0; i < rowNum; i++) {
-            List<Double> input = dataReader.getInput(i);
-
-            if (input.size() != colNum) {
-                throw new IllegalArgumentException("Nieprawidłowy rozmiar danych wejściowych");
-            }
-
-            for (int j = 0; j < colNum; j++) {
-                matrix.data[i][j] = input.get(j);
-            }
+            matrix.data[i][0] = input[i];
         }
-
         return matrix;
     }
 
     public void display() {
         for (int i = 0; i < rowNum; i++) {
             for (int j = 0; j < colNum; j++) {
-                System.out.print(data[i][j] + " ");
+                System.out.print(data[i][j]);
             }
-            System.out.println();
+            System.out.println('\n');
         }
     }
     public static Matrix multiply(Matrix a, Matrix b) {
