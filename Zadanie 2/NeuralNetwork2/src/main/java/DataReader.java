@@ -45,12 +45,12 @@ public class DataReader {
 
         //Losowo wybieramy zestaw danych i usuwamy z głównej listy.
         Random random = new Random();
-        while (data.size() > trainingSize) {
+        while (data.size() > 0) {
             int randomIndex = random.nextInt(data.size());
             double[][] values = data.remove(randomIndex);
             //Sprawdza, czy liczba wczytanych danych jest mniejsza trainingSize. Jeśli tak, to wzorzec
             // zostaje dodany do zbioru treningowego. W przeciwnym razie wzorzec zostaje dodany do zbioru testowego
-            if (data.size() > trainingSize) {
+            if (data.size() < trainingSize) {
                 addTrainingExample(values);
             } else {
                 double[] testvalue = values[1];

@@ -21,24 +21,24 @@ public class NeuralNetworkTrainer {
         for (int i = 0; i < numTrainingPatterns; i++) {
             patternOrder.add(i);
         }
-    //    for (int ep = 0; ep < epochs; ep++) {
-      //      epochsNum.add(ep+1);
+        for (int ep = 0; ep < epochs; ep++) {
+            epochsNum.add(ep+1);
             if (isRandom) {
                 Collections.shuffle(patternOrder);
             }
             for (int i = 0; i < numTrainingPatterns; i++) {
                 int patternIndex = patternOrder.get(i);
                 double[][] sample = reader.getTrainingData().get(patternIndex);
-                    network.train(sample[0], sample[1]);
-
+                network.train(sample[0], sample[1]);
             }
-//            calculatedNetworkErrors.add(network.getCurrentNeuralNetworkError() / reader.getTrainingData());
-//            network.currentNeuralNetworkError = 0.0;
+
+            calculatedNetworkErrors.add(network.getNeuralNetworkError() / reader.getTrainingData().size());
+            network.neuralNetworkError = 0.0;
         }
 
-        //drawErrorChart(calculatedNetworkErrors, epochsNum);
+        drawErrorChart(calculatedNetworkErrors, epochsNum);
 
-       // }
+        }
 
     private void drawErrorChart(ArrayList<Double> calculatedNetworkErrors, ArrayList<Integer> epochsNum) {
         SwingUtilities.invokeLater(() -> {
