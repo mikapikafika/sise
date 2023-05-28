@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.xml.crypto.Data;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,7 +39,37 @@ public class NeuralNetworkTrainer {
 
         drawErrorChart(calculatedNetworkErrors, epochsNum);
 
+    }
+
+
+    public void test() {
+        double[] stats = new double[3];
+        StatsMatrix species1 = new StatsMatrix(1);
+        StatsMatrix species2 = new StatsMatrix(2);
+        StatsMatrix species3 = new StatsMatrix(3);
+
+        for (int i = 0; i < reader.getTestingDataSize(); i++) {
+            Double[] test = network.test(/////);
+            System.out.println(Arrays.toString(test));
+
+            // Rezultat testu
+            int testResult = Arrays.asList(test).indexOf(Collections.max(Arrays.asList(test)));
+
+            // To, co powinno być rezultatem testu
+            int actualResult = /////
+
+            // hipoteza 0 lub 1 lub 2
+            species1.confusionMatrixValues(testResult, actualResult);
+            species2.confusionMatrixValues(testResult, actualResult);
+            species3.confusionMatrixValues(testResult, actualResult);
+
+            stats[testResult]++;
         }
+
+        System.out.println(Arrays.toString(stats));
+
+        //// rezultaty do pliku
+    }
 
     private void drawErrorChart(ArrayList<Double> calculatedNetworkErrors, ArrayList<Integer> epochsNum) {
         SwingUtilities.invokeLater(() -> {

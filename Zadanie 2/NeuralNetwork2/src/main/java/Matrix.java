@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Matrix implements Cloneable{
@@ -52,6 +53,7 @@ public class Matrix implements Cloneable{
         }
         return bias;
     }
+
     public static Matrix multiply(Matrix a, Matrix b) {
 
         Matrix c = new Matrix(a.rowNum, b.colNum);
@@ -124,6 +126,16 @@ public class Matrix implements Cloneable{
             }
         }
         return c;
+    }
+
+    public static Double[] toArray(Matrix temp) {
+        List<Double> array = new ArrayList<>();
+        for (int i = 0; i < temp.rowNum; i++) {
+            for (int j = 0; j < temp.colNum; j++) {
+                array.add(temp.data[i][j]);
+            }
+        }
+        return array.toArray(Double[]::new);
     }
 
     public Matrix multiplyByScalar(double i) {

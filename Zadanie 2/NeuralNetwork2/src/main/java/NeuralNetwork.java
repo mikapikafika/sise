@@ -123,6 +123,41 @@ public class NeuralNetwork {
         calculateNeuralNetworkError(outputErrors.data);
     }
 
+
+    public Double[] test(double[] input) {
+        Matrix inputMatrix = new Matrix();
+        inputMatrix = inputMatrix.createFromInput(input);
+        Matrix hidden = new Matrix();
+        hidden = hidden.multiply(hiddenLayerWeights, inputMatrix);
+
+        //        Jeżeli używamy biasu, kod dodaje wartość 1 do wartości neuronów ukrytych
+        if(BiasHidden)
+        {
+            hidden = hidden.add(hidden,this.biasH);
+        }
+
+        //        Obliczenie wyjść warstwy ukrytej
+        hidden = hidden.sigmoid();
+
+        //      Obliczenia w warstwie wyjściowej
+        Matrix output = new Matrix();
+        output = output.multiply(outputLayerWeights, hidden);
+
+        //        Jeżeli używamy biasu, kod dodaje wartość 1 do wartości neuronów wyjściowych
+        if(BiasOutput)
+        {
+            //biasO = biasO.createBias(outputNeurons,1);
+            output = output.add(output,this.biasO);
+        }
+//      Obliczenie wyjść warstwy wyjściowej
+        output = output.sigmoid();
+
+        return Matrix.toArray(output);
+
+    }
+
+
+
     private void calculateNeuralNetworkError(double[][] data) {
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[0].length; j++) {
