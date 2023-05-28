@@ -1,3 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class NeuralNetwork {
     private final double learningRate;
     private final double momentum;
@@ -125,6 +129,7 @@ public class NeuralNetwork {
 
 
     public Double[] test(double[] input) {
+        //        [Propagacja w przód]
         Matrix inputMatrix = new Matrix();
         inputMatrix = inputMatrix.createFromInput(input);
         Matrix hidden = new Matrix();
@@ -156,6 +161,20 @@ public class NeuralNetwork {
 
     }
 
+    public void savePropertiesToFile(String filePath) throws IOException {
+        try (FileWriter fileWriter = new FileWriter(filePath);
+             BufferedWriter writer = new BufferedWriter(fileWriter)) {
+            writer.write("Wzorzec wejściowy: " + "\n");
+            writer.write("Błąd popełniony przez sieć dla wzorca: " + "\n");
+            writer.write("Pożądany wzorzec odpowiedzi: " + "\n");
+            writer.write("Błędy popełnione na wyjściach sieci: " + "\n");
+            writer.write("Wartości wyjściowe neuronów wyjściowych: " + "\n");
+            writer.write("Wagi neuronów wyjściowych: " + "\n");
+            writer.write("Wartości wyjściowe neuronów ukrytych: " + "\n");
+            writer.write("Wagi neuronów ukrytych: " + "\n\n");
+        }
+    }
+
 
 
     private void calculateNeuralNetworkError(double[][] data) {
@@ -169,4 +188,5 @@ public class NeuralNetwork {
     public double getNeuralNetworkError() {
         return neuralNetworkError;
     }
+
 }

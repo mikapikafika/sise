@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 
 public class DataReader {
@@ -61,25 +60,6 @@ public class DataReader {
         scanner.close();
     }
 
-    public void loadTestingDataFromFile(String filePath) throws FileNotFoundException {
-        File file = new File(filePath);
-        Scanner scanner = new Scanner(file);
-
-        List<double[]> data = new ArrayList<>();
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            List<String> values = List.of(line.split(","));
-
-            double[] input = new double[values.size() - 1];
-            for (int j = 0; j < input.length; j++) {
-                input[j] = Double.parseDouble(values.get(j));
-            }
-            data.add(input);
-        }
-
-        scanner.close();
-    }
-
     public void addTrainingExample(double[][] trainData) {
         trainingData.add(trainData);
     }
@@ -95,10 +75,13 @@ public class DataReader {
     public List<double[]> getTestingData() {
         return testingData;
     }
+
     public int getTrainingDataSize(){
         return trainingData.size();
     }
+
     public int getTestingDataSize(){
         return testingData.size();
     }
+
 }

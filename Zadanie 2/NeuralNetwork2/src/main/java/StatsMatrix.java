@@ -17,7 +17,7 @@ public class StatsMatrix {
 
         if (researchClassification && actualClassification) {
             this.TP++;
-            this.correctlyClassified++;         // na pewno tu nie wiem czy gdzieś jeszcze
+            this.correctlyClassified++;
         } else if (!actualClassification && researchClassification) {
             this.FP++;
         } else if (!researchClassification && actualClassification) {
@@ -27,7 +27,7 @@ public class StatsMatrix {
         }
     }
 
-    public void trainingEffectiveness() {
+    public void displayResults() {
         System.out.println("============ Klasa " + this.species + " ===============");
         System.out.println("TP: " + this.TP);
         System.out.println("TN: " + this.TN);
