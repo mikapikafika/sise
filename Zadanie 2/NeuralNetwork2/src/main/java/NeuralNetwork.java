@@ -33,42 +33,49 @@ public class NeuralNetwork {
 
     public void train(double[] input, double[] targetOutput)
     {
-        Matrix targetOutputMatrix = new Matrix();
+//        Reprezentuje docelowe wyjście
+        Matrix targetOutputMatrix;
         targetOutputMatrix = Matrix.createFromInput(targetOutput);
-//        [Propagacja w przód]
+
+//  =======  [Propagacja w przód]  =======
 //        Obliczenia w warstwie ukrytej
         Matrix inputMatrix = new Matrix();
         inputMatrix = inputMatrix.createFromInput(input);
         Matrix hidden = new Matrix();
         hidden = hidden.multiply(hiddenLayerWeights, inputMatrix);
+//        Klonowanie macierzy jest wykorzystywane do przechowywania oryginalnych wag przed ich aktualizacją
+//        za pomocą propagacji wstecznej, ponieważ są używane do obliczeń związanych z momentum
         Matrix tempWeightH = hiddenLayerWeights.clone();
+
 //        Jeżeli używamy biasu, kod dodaje wartość 1 do wartości neuronów ukrytych
-        if(BiasHidden)
+        if (BiasHidden)
         {
-            //biasH = biasH.createBias(hiddenNeurons,1);
             hidden = hidden.add(hidden,this.biasH);
         }
 //        Obliczenie wyjść warstwy ukrytej
         hidden = hidden.sigmoid();
 
-//      Obliczenia w warstwie wyjściowej
+
+//        Obliczenia w warstwie wyjściowej
         Matrix output = new Matrix();
         output = output.multiply(outputLayerWeights, hidden);
         Matrix tempWeightO = outputLayerWeights.clone();
+
 //        Jeżeli używamy biasu, kod dodaje wartość 1 do wartości neuronów wyjściowych
-        if(BiasOutput)
+        if (BiasOutput)
         {
-            //biasO = biasO.createBias(outputNeurons,1);
             output = output.add(output,this.biasO);
         }
+
 //      Obliczenie wyjść warstwy wyjściowej
         output = output.sigmoid();
 
-//        [Obliczanie błędów]
+
+//  =======  [Obliczanie błędów]  =======
         Matrix outputErrors = new Matrix();
         outputErrors = outputErrors.calculateErrors(targetOutputMatrix, output);
 
-//        [Propagacja wstecz]
+//  =======  [Propagacja wstecz]  =======
 //        Obliczanie gradientu
         Matrix gradient = new Matrix();
         gradient = gradient.derivativeSigmoid(output);
@@ -78,101 +85,112 @@ public class NeuralNetwork {
         gradient = gradient.multiplyByScalarMatrix(temp);
         Matrix tempGradient = gradient.clone();
         Matrix transposedHidden = hidden.transpose();
+
+//        Aktualizacja wag warstwy wyjściowej
         Matrix outputWeightsDelta = new Matrix();
         outputWeightsDelta = outputWeightsDelta.multiply(gradient, transposedHidden);
         outputWeightsDelta = outputWeightsDelta.multiplyByScalar(learningRate);
         outputWeightsDelta = outputWeightsDelta.multiplyByScalar(-1);
-//        Aktualizacja wag
         outputLayerWeights = outputLayerWeights.add(outputLayerWeights, outputWeightsDelta);
 
 //        Uwzględnianie momentum, jeżeli jest różne od 0
-        if(momentum != 0) {
+        if (momentum != 0) {
             Matrix momentumMatrix = new Matrix();
             momentumMatrix = momentumMatrix.subtract(outputLayerWeights, tempWeightO);
             momentumMatrix = momentumMatrix.multiplyByScalar(momentum);
             outputLayerWeights = outputLayerWeights.add(outputLayerWeights, momentumMatrix);
         }
-//      Aktualizacja biasu
-        if(BiasOutput)
+
+//        Aktualizacja biasu dla warstwy wyjściowej
+        if (BiasOutput)
         {
             biasO = biasO.subtract(biasO, gradient);
         }
 
-//    Obliczanie błędów warstwy ukrytej
+//        Obliczanie błędów warstwy ukrytej
         Matrix tempTWeightO = tempWeightO.transpose();
         Matrix hiddenErrors = new Matrix();
         hiddenErrors = hiddenErrors.multiply(tempTWeightO, tempGradient);
         Matrix gradientHidden = new Matrix();
         gradientHidden = gradientHidden.derivativeSigmoid(hidden);
         gradientHidden = gradientHidden.multiplyByScalarMatrix(hiddenErrors);
-//      Aktualizacja wag warstwy ukrytej
+
+//       Aktualizacja wag warstwy ukrytej
         Matrix inputTransposed = inputMatrix.transpose();
         Matrix hiddenWeightsDelta = new Matrix();
         hiddenWeightsDelta = hiddenWeightsDelta.multiply(gradientHidden, inputTransposed);
         hiddenWeightsDelta = hiddenWeightsDelta.multiplyByScalar(learningRate);
         hiddenWeightsDelta = hiddenWeightsDelta.multiplyByScalar(-1);
         hiddenLayerWeights = hiddenLayerWeights.add(hiddenLayerWeights, hiddenWeightsDelta);
+
 //        Uwzględnianie momentum, jeżeli jest różne od 0
-        if(momentum != 0) {
+        if (momentum != 0) {
             Matrix momentumMatrix = new Matrix();
             momentumMatrix = momentumMatrix.subtract(hiddenLayerWeights, tempWeightH);
             momentumMatrix = momentumMatrix.multiplyByScalar(momentum);
             hiddenLayerWeights = hiddenLayerWeights.add(hiddenLayerWeights, momentumMatrix);
         }
-//      Aktualizacja biasu
-        if(BiasHidden)
+//        Aktualizacja biasu dla warstwy ukrytej
+        if (BiasHidden)
         {
             biasH = biasH.subtract(biasH, gradientHidden);
         }
+
+
         calculateNeuralNetworkError(outputErrors.data);
     }
 
 
-    public Double[] test(double[] input) {
-        //        [Propagacja w przód]
+    public Double[] test(double[] input, double[] targetOutput, String filePath) {
         Matrix inputMatrix = new Matrix();
         inputMatrix = inputMatrix.createFromInput(input);
+
+//  =======  [Propagacja w przód]  =======
+//        Obliczenia w warstwie ukrytej
         Matrix hidden = new Matrix();
         hidden = hidden.multiply(hiddenLayerWeights, inputMatrix);
 
-        //        Jeżeli używamy biasu, kod dodaje wartość 1 do wartości neuronów ukrytych
-        if(BiasHidden)
+//       Jeżeli używamy biasu, kod dodaje wartość 1 do wartości neuronów wyjściowych
+        if (BiasHidden)
         {
             hidden = hidden.add(hidden,this.biasH);
         }
 
-        //        Obliczenie wyjść warstwy ukrytej
+//       Obliczenie wyjść warstwy ukrytej
         hidden = hidden.sigmoid();
 
-        //      Obliczenia w warstwie wyjściowej
+
+//        Obliczenia w warstwie wyjściowej
         Matrix output = new Matrix();
         output = output.multiply(outputLayerWeights, hidden);
 
-        //        Jeżeli używamy biasu, kod dodaje wartość 1 do wartości neuronów wyjściowych
-        if(BiasOutput)
+//       Jeżeli używamy biasu, kod dodaje wartość 1 do wartości neuronów wyjściowych
+        if (BiasOutput)
         {
-            //biasO = biasO.createBias(outputNeurons,1);
             output = output.add(output,this.biasO);
         }
+
 //      Obliczenie wyjść warstwy wyjściowej
         output = output.sigmoid();
 
-        return Matrix.toArray(output);
-
-    }
-
-    public void savePropertiesToFile(String filePath) throws IOException {
         try (FileWriter fileWriter = new FileWriter(filePath);
              BufferedWriter writer = new BufferedWriter(fileWriter)) {
-            writer.write("Wzorzec wejściowy: " + "\n");
-            writer.write("Błąd popełniony przez sieć dla wzorca: " + "\n");
-            writer.write("Pożądany wzorzec odpowiedzi: " + "\n");
-            writer.write("Błędy popełnione na wyjściach sieci: " + "\n");
-            writer.write("Wartości wyjściowe neuronów wyjściowych: " + "\n");
-            writer.write("Wagi neuronów wyjściowych: " + "\n");
-            writer.write("Wartości wyjściowe neuronów ukrytych: " + "\n");
-            writer.write("Wagi neuronów ukrytych: " + "\n\n");
+            writer.write("Wzorzec wejściowy: " + inputMatrix + "\n");
+            writer.write("Błąd popełniony przez sieć dla wzorca: " + getNeuralNetworkError() + "\n");
+            Matrix targetOutputMatrix = Matrix.createFromInput(targetOutput);
+            writer.write("Pożądany wzorzec odpowiedzi: " + targetOutputMatrix + "\n");
+            Matrix outputErrors = new Matrix();
+            outputErrors = outputErrors.calculateErrors(Matrix.createFromInput(targetOutput), Matrix.createFromInput(input));
+            writer.write("Błędy popełnione na wyjściach sieci: " + outputErrors + "\n");
+            writer.write("Wartości wyjściowe neuronów wyjściowych: " + Matrix.createFromInput(Matrix.doubleToDouble(Matrix.toDoubleArray(output))) + "\n");
+            writer.write("Wagi neuronów wyjściowych: " + Matrix.matrixToString(outputLayerWeights.data) + "\n");
+            writer.write("Wartości wyjściowe neuronów ukrytych: " + Matrix.matrixToString(hidden.data) + "\n");
+            writer.write("Wagi neuronów ukrytych: " + Matrix.matrixToString(hiddenLayerWeights.data) + "\n\n");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
+        return Matrix.toDoubleArray(output);
     }
 
 

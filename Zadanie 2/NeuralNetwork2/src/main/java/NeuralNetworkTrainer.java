@@ -51,7 +51,7 @@ public class NeuralNetworkTrainer {
         StatsMatrix species3 = new StatsMatrix(3);
 
         for (int i = 0; i < reader.getTestingDataSize(); i++) {
-            Double[] test = network.test(reader.getTestingData().get(i));
+            Double[] test = network.test();                         /// !!!!!!!!!!!!!!!
             System.out.println(Arrays.toString(test));
 
             // Rezultat testu
@@ -59,8 +59,7 @@ public class NeuralNetworkTrainer {
 
             // To, co powinno być rezultatem testu
             int actualResult = (int) reader.getTestingData().get(i)[4];
-
-            // hipoteza 0 lub 1 lub 2
+            
             species1.confusionMatrixValues(testResult, actualResult);
             species2.confusionMatrixValues(testResult, actualResult);
             species3.confusionMatrixValues(testResult, actualResult);

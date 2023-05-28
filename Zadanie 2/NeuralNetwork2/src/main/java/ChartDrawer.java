@@ -9,6 +9,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 public class ChartDrawer extends JFrame {
+
     public ChartDrawer(String title, ArrayList<Integer> x, ArrayList<Double> y) throws HeadlessException {
         super(title);
         XYSeries series = addData(x, y);

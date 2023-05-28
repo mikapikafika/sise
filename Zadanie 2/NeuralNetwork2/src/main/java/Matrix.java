@@ -15,6 +15,9 @@ public class Matrix implements Cloneable{
     public Matrix() {
     }
 
+    /**
+     * Ustawia losowe wartości z zakresu (-1/sqrt(rowNum), 1/sqrt(rowNum))
+     */
     public void randomizeValues()
     {
         for (int i = 0; i < rowNum; i++)
@@ -26,6 +29,12 @@ public class Matrix implements Cloneable{
         }
     }
 
+    /**
+     * Tworzy macierz mającą tyle samo wierszy, co długość input i jedną kolumnę
+     * Elementy macierzy = wartości z tablicy input
+     * @param input
+     * @return nową macierz
+     */
     public static Matrix createFromInput(double[] input) {
         int rowNum = input.length;
         Matrix matrix = new Matrix(rowNum, 1);
@@ -44,6 +53,12 @@ public class Matrix implements Cloneable{
         }
     }
 
+    /**
+     * Tworzy wektor obciążenia (bias) wypełniony jedynkami
+     * @param row
+     * @param col
+     * @return bias
+     */
     public static Matrix createBias(int row, int col)
     {
         Matrix bias = new Matrix(row, col);
@@ -81,6 +96,10 @@ public class Matrix implements Cloneable{
         return c;
     }
 
+    /**
+     * Oblicza funkcję sigmoidalną dla każdego elementu w macierzy
+     * @return wynik - nowa macierz
+     */
     public Matrix sigmoid() {
         Matrix c = new Matrix(rowNum, colNum);
         for (int i = 0; i < rowNum; i++) {
@@ -91,6 +110,12 @@ public class Matrix implements Cloneable{
         return c;
     }
 
+    /**
+     * Oblicza błędy dla każdego elementu w macierzy na podstawie docelowej macierzy wyjściowej i macierzy wyjściowej
+     * @param targetOutputMatrix
+     * @param output
+     * @return nową macierz
+     */
     public Matrix calculateErrors(Matrix targetOutputMatrix, Matrix output) {
         int rows = targetOutputMatrix.rowNum;
         int cols = targetOutputMatrix.colNum;
@@ -103,13 +128,18 @@ public class Matrix implements Cloneable{
         return c;
     }
 
+    /**
+     * Oblicza pochodną funkcji sigmoidalnej dla każdego elementu w macierzy
+     * @param output
+     * @return nową macierz
+     */
     public Matrix derivativeSigmoid(Matrix output) {
         int rows = output.rowNum;
         int cols = output.colNum;
         Matrix c = new Matrix(rows, cols);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-//                x * (1 - x)
+                // x * (1 - x)
                 c.data[i][j] = output.data[i][j] * (1 - output.data[i][j]);
             }
         }
@@ -128,7 +158,7 @@ public class Matrix implements Cloneable{
         return c;
     }
 
-    public static Double[] toArray(Matrix temp) {
+    public static Double[] toDoubleArray(Matrix temp) {
         List<Double> array = new ArrayList<>();
         for (int i = 0; i < temp.rowNum; i++) {
             for (int j = 0; j < temp.colNum; j++) {
@@ -172,6 +202,25 @@ public class Matrix implements Cloneable{
             }
         }
         return c;
+    }
+
+    public static double[] doubleToDouble(Double[] array) {
+        double[] newArray = new double[array.length];
+        for (int i = 0; i < array.length; i++) {
+            newArray[i] = array[i];
+        }
+        return newArray;
+    }
+
+    public static String matrixToString(double[][] temp) {
+        StringBuilder sb = new StringBuilder();
+        for (double[] row : temp) {
+            for (double value : row) {
+                sb.append(value).append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
     @Override

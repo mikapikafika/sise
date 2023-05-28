@@ -45,7 +45,6 @@ public class StatsMatrix {
         return (this.TP / (this.TP + this.FP));
     }
 
-
     public double getRecall() {
         return (this.TP / (this.TP + this.FN));
     }
