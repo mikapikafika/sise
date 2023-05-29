@@ -53,6 +53,14 @@ public class NeuralNetworkTrainer {
 
     }
 
+    public void testEncoder() {
+        for (int i = 0; i < reader.getTestingDataSize(); i++) {
+            List<double[]> input = reader.getTestingInput();
+            List<double[]> desired = reader.getTestingResult();
+            double[] test = network.test(input.get(i), desired.get(i), "test_encoder_result.txt");
+        }
+    }
+
     public void test() {
         double epsilon = 0.1;
         StatsMatrix species1 = new StatsMatrix(new double[]{1.0, 0.0, 0.0});
