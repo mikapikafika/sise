@@ -31,7 +31,7 @@ public class NeuralNetwork implements Serializable {
         hiddenLayerWeights.randomizeValues();
     }
 
-    public void train(double[] input, double[] targetOutput, double momentum, boolean isBias)
+    public void train(double[] input, double[] targetOutput, double momentum, Boolean isBias)
     {
         this.momentum = momentum;
         if(isBias == false)

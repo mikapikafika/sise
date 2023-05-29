@@ -18,7 +18,7 @@ public class NeuralNetworkTrainer {
         this.reader = reader;
     }
 
-    public void train(int epochs, double momentum, boolean isBias, boolean isRandom) {
+    public void train(int epochs, double momentum, Boolean isBias, Boolean isRandom) {
         ArrayList<Double> calculatedNetworkErrors = new ArrayList<>();
         ArrayList<Integer> epochsNum = new ArrayList<>();
         int numTrainingPatterns = reader.getTrainingDataSize();

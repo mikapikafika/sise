@@ -22,8 +22,6 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
         DataReader dataReader = new DataReader();
-
-
         //dataReader.loadTrainingDataFromFile("C:\\Studia\\SISE\\Zadanie 2\\Irysy\\iris.txt",0.8);
 
         NeuralNetwork network;
@@ -41,8 +39,7 @@ public class Main {
         {
             dataReader.loadAutoEncoderDataFromFile("H:\\GitRepositories\\SISE\\Zadanie 2\\Irysy\\autoencoder.txt");
             NeuralNetworkTrainer trainer = new NeuralNetworkTrainer(network, dataReader);
-            trainer.train(Integer.parseInt(args[1]), Double.parseDouble(args[2]), Boolean.getBoolean(args[3]), Boolean.getBoolean(args[4]));
-            trainer.test();
+            trainer.train(Integer.parseInt(args[1]), Double.parseDouble(args[2]), Boolean.parseBoolean(args[3]), Boolean.parseBoolean(args[4]));
         }
         else
         {
