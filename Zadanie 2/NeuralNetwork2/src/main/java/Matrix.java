@@ -45,15 +45,6 @@ public class Matrix implements Cloneable, Serializable {
         return matrix;
     }
 
-    public void display() {
-        for (int i = 0; i < rowNum; i++) {
-            for (int j = 0; j < colNum; j++) {
-                System.out.print(data[i][j]);
-            }
-            System.out.println('\n');
-        }
-    }
-
     /**
      * Tworzy wektor obciążenia (bias) wypełniony jedynkami
      * @param row
@@ -206,14 +197,6 @@ public class Matrix implements Cloneable, Serializable {
             }
         }
         return c;
-    }
-
-    public static double[] doubleToDouble(Double[] array) {
-        double[] newArray = new double[array.length];
-        for (int i = 0; i < array.length; i++) {
-            newArray[i] = array[i];
-        }
-        return newArray;
     }
 
     public static String matrixToString(double[][] temp) {

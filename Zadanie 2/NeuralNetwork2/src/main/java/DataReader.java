@@ -59,6 +59,38 @@ public class DataReader {
         scanner.close();
     }
 
+    public void loadAutoEncoderDataFromFile(String filePath) throws FileNotFoundException {
+        File file = new File(filePath);
+        Scanner scanner = new Scanner(file);
+
+        List<double[][]> data = new ArrayList<>();
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            List<String> values = List.of(line.split(","));
+
+            double[] input = new double[4];
+            for (int j = 0; j < 4; j++) {
+                input[j] = Double.parseDouble(values.get(j));
+            }
+            double[] output = new double[4];
+            for (int j = 0; j < 4; j++) {
+                output[j] = Double.parseDouble(values.get(values.size() - 4 + j)); // Konwersja na int i przypisanie wartości
+            }
+            double[][] object = new double[][] { input, output };
+            data.add(object);
+        }
+        //Losowo wybieramy zestaw danych i usuwamy z głównej listy.
+        Random random = new Random();
+        while (data.size() > 0) {
+            int randomIndex = random.nextInt(data.size());
+            double[][] values = data.remove(randomIndex);
+            addTrainingExample(values);
+            addTestExample(values);
+        }
+
+        scanner.close();
+    }
+
     public void addTrainingExample(double[][] trainData) {
         trainingData.add(trainData);
     }

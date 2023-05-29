@@ -32,12 +32,12 @@ public class StatsMatrix implements Serializable {
 
     public void displayResults() {
         System.out.println("============ Klasa " + doubleArrayToString(species) + " ===============");
-        System.out.println("TP: " + this.TP);
-        System.out.println("TN: " + this.TN);
-        System.out.println("FP: " + this.FP);
-        System.out.println("FN: " + this.FN);
-        System.out.println("Precyzja: " + getPrecision());
-        System.out.println("Czułość: " + getRecall());
+        System.out.println("TP: " + this.TP);   //Sieć wskazuje na poprawne i w rzeczywistości też jest poprawne
+        System.out.println("TN: " + this.TN);   //Sieć wskazuje na niepoprawne i w rzeczywistości też jest niepoprawne
+        System.out.println("FP: " + this.FP);   //Sieć wskazuje na poprawne, ale w rzeczywistości jest niepoprawne
+        System.out.println("FN: " + this.FN);   //Sieć wskazuje na niepoprawne, ale w rzeczywistości jest poprawne
+        System.out.println("Precyzja: " + getPrecision());  //Ile otrzymanych jest prawidłowych(z wszystkich)
+        System.out.println("Czułość: " + getRecall());      //Ile prawidłowych otrzymano(ze wszystkich prawidłowych)
         System.out.println("F-measure: " + getFMeasure());
         System.out.println("Poprawnie sklasyfikowane: " + this.correctlyClassified);
         System.out.println("=========================================");

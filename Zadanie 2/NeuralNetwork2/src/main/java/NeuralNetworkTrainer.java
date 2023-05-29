@@ -11,6 +11,7 @@ import java.util.List;
 public class NeuralNetworkTrainer {
     NeuralNetwork network;
     DataReader reader;
+    double epsilon = 0.01;
 
     public NeuralNetworkTrainer(NeuralNetwork network, DataReader reader) {
         this.network = network;
@@ -40,6 +41,11 @@ public class NeuralNetworkTrainer {
             if ((ep+1) % 20 == 0) {
                 saveErrorToFile(network.getNeuralNetworkError() / reader.getTrainingData().size(), ep+1);
             }
+            if(network.getNeuralNetworkError() < epsilon)
+            {
+                System.out.println("Dokładność 0.01 osiągnięta po: "+ epochsNum.get(epochsNum.size()-1)+ " epokach");
+                break;
+            }
             network.neuralNetworkError = 0.0;
         }
 
@@ -48,14 +54,10 @@ public class NeuralNetworkTrainer {
     }
 
     public void test() {
-        double[] stats = new double[3];
         double epsilon = 0.1;
         StatsMatrix species1 = new StatsMatrix(new double[]{1.0, 0.0, 0.0});
         StatsMatrix species2 = new StatsMatrix(new double[]{0.0, 1.0, 0.0});
         StatsMatrix species3 = new StatsMatrix(new double[]{0.0, 0.0, 1.0});
-        int spec1count = 0;
-        int spec2count = 0;
-        int spec3count = 0;
         int tmp1 = 0;
         int tmp2 = 0;
         int tmp3 = 0;
@@ -82,7 +84,6 @@ public class NeuralNetworkTrainer {
 
 
 //            // To, co powinno być rezultatem testu
-//            int actualResult = (int) desired.get(i);
             double[] actualResult = desired.get(i);
             double[] bigTestResult = new double[]{tmp1, tmp2, tmp3};
             
