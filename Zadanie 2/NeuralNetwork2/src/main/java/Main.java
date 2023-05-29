@@ -47,7 +47,7 @@ public class Main {
             NeuralNetworkTrainer trainer = new NeuralNetworkTrainer(network, dataReader);
             switch (args[0]){
                 case"train":
-                    trainer.train(Integer.parseInt(args[1]), Double.parseDouble(args[2]), Boolean.getBoolean(args[3]), Boolean.getBoolean(args[4]));
+                    trainer.train(Integer.parseInt(args[1]), Double.parseDouble(args[2]), Boolean.parseBoolean(args[3]), Boolean.parseBoolean(args[4]));
                     System.out.println("Czy chcesz zapisać sieć do pliku? t/n");
                     if(Objects.equals(scanner.nextLine(), "t"))
                     {
