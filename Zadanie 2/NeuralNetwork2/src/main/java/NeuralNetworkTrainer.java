@@ -37,6 +37,9 @@ public class NeuralNetworkTrainer {
             }
 
             calculatedNetworkErrors.add(network.getNeuralNetworkError() / reader.getTrainingData().size());
+            if ((ep+1) % 20 == 0) {
+                saveErrorToFile(network.getNeuralNetworkError() / reader.getTrainingData().size(), ep+1);
+            }
             network.neuralNetworkError = 0.0;
         }
 
@@ -109,6 +112,15 @@ public class NeuralNetworkTrainer {
             errorChart.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             errorChart.setVisible(true);
         });
+    }
+
+    private void saveErrorToFile(double error, int epoch) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("error_log.txt", true))) {
+            writer.write("Epoch: " + epoch + ", Error: " + error);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
