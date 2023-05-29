@@ -4,7 +4,7 @@ import java.util.*;
 public class DataReader {
     private List<double[][]> trainingData;
 
-    private List<double[]> testingData;
+    private List<double[][]> testingData;
 
     public DataReader() {
         trainingData = new ArrayList<>();
@@ -52,8 +52,7 @@ public class DataReader {
             if (data.size() < trainingSize) {
                 addTrainingExample(values);
             } else {
-                double[] testvalue = values[1];
-                addTestExample(testvalue);
+                addTestExample(values);
             }
         }
 
@@ -64,7 +63,7 @@ public class DataReader {
         trainingData.add(trainData);
     }
 
-    public void addTestExample(double[] testData) {
+    public void addTestExample(double[][] testData) {
         testingData.add(testData);
     }
 
@@ -72,8 +71,22 @@ public class DataReader {
         return trainingData;
     }
 
-    public List<double[]> getTestingData() {
+    public List<double[][]> getTestingData() {
         return testingData;
+    }
+    public List<double[]> getTestingResult() {
+        List<double[]> desired = new ArrayList<>();
+        for (int i = 0; i < testingData.size(); i++) {
+            desired.add(testingData.get(i)[1]);
+        }
+        return desired;
+    }
+    public List<double[]> getTestingInput() {
+        List<double[]> desired = new ArrayList<>();
+        for (int i = 0; i < testingData.size(); i++) {
+            desired.add(testingData.get(i)[0]);
+        }
+        return desired;
     }
 
     public int getTrainingDataSize(){

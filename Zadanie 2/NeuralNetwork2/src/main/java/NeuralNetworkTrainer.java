@@ -46,32 +46,57 @@ public class NeuralNetworkTrainer {
 
     public void test() {
         double[] stats = new double[3];
-        StatsMatrix species1 = new StatsMatrix(1);
-        StatsMatrix species2 = new StatsMatrix(2);
-        StatsMatrix species3 = new StatsMatrix(3);
+        double epsilon = 0.1;
+        StatsMatrix species1 = new StatsMatrix(new double[]{1.0, 0.0, 0.0});
+        StatsMatrix species2 = new StatsMatrix(new double[]{0.0, 1.0, 0.0});
+        StatsMatrix species3 = new StatsMatrix(new double[]{0.0, 0.0, 1.0});
+        int spec1count = 0;
+        int spec2count = 0;
+        int spec3count = 0;
+        int tmp1 = 0;
+        int tmp2 = 0;
+        int tmp3 = 0;
 
+        List<double[]> input = reader.getTestingInput();
+        List<double[]> desired = reader.getTestingResult();
         for (int i = 0; i < reader.getTestingDataSize(); i++) {
-            Double[] test = network.test();                         /// !!!!!!!!!!!!!!!
-            System.out.println(Arrays.toString(test));
+            double[] test = network.test(input.get(i),desired.get(i),"test_result.txt");
 
             // Rezultat testu
-            int testResult = Arrays.asList(test).indexOf(Collections.max(Arrays.asList(test)));
+            double[] testResult = test;
 
-            // To, co powinno być rezultatem testu
-            int actualResult = (int) reader.getTestingData().get(i)[4];
+            if (Math.abs(testResult[0] - 1.0) < epsilon) {
+                tmp1++;
+            }
+
+            if (Math.abs(testResult[1] - 1.0) < epsilon) {
+                tmp2++;
+            }
+
+            if (Math.abs(testResult[2] - 1.0) < epsilon) {
+                tmp3++;
+            }
+
+
+//            // To, co powinno być rezultatem testu
+//            int actualResult = (int) desired.get(i);
+            double[] actualResult = desired.get(i);
+            double[] bigTestResult = new double[]{tmp1, tmp2, tmp3};
             
-            species1.confusionMatrixValues(testResult, actualResult);
-            species2.confusionMatrixValues(testResult, actualResult);
-            species3.confusionMatrixValues(testResult, actualResult);
+            species1.confusionMatrixValues(bigTestResult, actualResult);
+            species2.confusionMatrixValues(bigTestResult, actualResult);
+            species3.confusionMatrixValues(bigTestResult, actualResult);
 
-            stats[testResult]++;
+            tmp1 = 0;
+            tmp2 = 0;
+            tmp3 = 0;
         }
 
-        System.out.println(Arrays.toString(stats));
 
         species1.displayResults();
         species2.displayResults();
         species3.displayResults();
+
     }
 
 

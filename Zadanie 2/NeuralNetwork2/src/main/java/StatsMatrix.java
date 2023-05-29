@@ -1,18 +1,20 @@
+import java.util.Arrays;
+
 public class StatsMatrix {
     private double TP;
     private double TN;
     private double FP;
     private double FN;
-    private double species;
+    private double[] species;
     private double correctlyClassified;
 
-    public StatsMatrix(double species) {
+    public StatsMatrix(double[] species) {
         this.species = species;
     }
 
-    public void confusionMatrixValues(double research, double actual) {
-        boolean researchClassification = research == this.species;
-        boolean actualClassification = actual == this.species;
+    public void confusionMatrixValues(double[] research, double[] actual) {
+        boolean researchClassification = Arrays.equals(research, this.species);
+        boolean actualClassification = Arrays.equals(actual, this.species);
 
 
         if (researchClassification && actualClassification) {
@@ -28,7 +30,7 @@ public class StatsMatrix {
     }
 
     public void displayResults() {
-        System.out.println("============ Klasa " + this.species + " ===============");
+        System.out.println("============ Klasa " + doubleArrayToString(species) + " ===============");
         System.out.println("TP: " + this.TP);
         System.out.println("TN: " + this.TN);
         System.out.println("FP: " + this.FP);
@@ -51,5 +53,18 @@ public class StatsMatrix {
 
     public double getFMeasure() {
         return 2 * ((getPrecision() * getRecall()) / (getPrecision() + getRecall()));
+    }
+
+    public static String doubleArrayToString(double[] array) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < array.length; i++) {
+            sb.append(array[i]);
+            if (i < array.length - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append("]");
+        return sb.toString();
     }
 }

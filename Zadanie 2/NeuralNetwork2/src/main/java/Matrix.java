@@ -158,14 +158,26 @@ public class Matrix implements Cloneable{
         return c;
     }
 
-    public static Double[] toDoubleArray(Matrix temp) {
-        List<Double> array = new ArrayList<>();
+//    public static Double[] toDoubleArray(Matrix temp) {
+//        List<Double> array = new ArrayList<>();
+//        for (int i = 0; i < temp.rowNum; i++) {
+//            for (int j = 0; j < temp.colNum; j++) {
+//                array.add(temp.data[i][j]);
+//            }
+//        }
+//        return array.toArray(Double[]::new);
+//    }
+
+    public static double[] toDoubleArray(Matrix temp) {
+        double[] array = new double[temp.rowNum * temp.colNum];
+        int index = 0;
         for (int i = 0; i < temp.rowNum; i++) {
             for (int j = 0; j < temp.colNum; j++) {
-                array.add(temp.data[i][j]);
+                array[index] = temp.data[i][j];
+                index++;
             }
         }
-        return array.toArray(Double[]::new);
+        return array;
     }
 
     public Matrix multiplyByScalar(double i) {
@@ -235,5 +247,17 @@ public class Matrix implements Cloneable{
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < rowNum; i++) {
+            for (int j = 0; j < colNum; j++) {
+                sb.append(data[i][j]).append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }

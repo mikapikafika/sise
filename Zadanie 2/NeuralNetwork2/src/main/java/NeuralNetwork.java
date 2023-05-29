@@ -141,7 +141,7 @@ public class NeuralNetwork {
     }
 
 
-    public Double[] test(double[] input, double[] targetOutput, String filePath) {
+    public double[] test(double[] input, double[] targetOutput, String filePath) {
         Matrix inputMatrix = new Matrix();
         inputMatrix = inputMatrix.createFromInput(input);
 
@@ -173,16 +173,17 @@ public class NeuralNetwork {
 //      Obliczenie wyjść warstwy wyjściowej
         output = output.sigmoid();
 
-        try (FileWriter fileWriter = new FileWriter(filePath);
+        try (FileWriter fileWriter = new FileWriter(filePath, true);
              BufferedWriter writer = new BufferedWriter(fileWriter)) {
             writer.write("Wzorzec wejściowy: " + inputMatrix + "\n");
+            Matrix outputErrors = new Matrix();
+            outputErrors = outputErrors.calculateErrors(Matrix.createFromInput(targetOutput), output);
+            calculateNeuralNetworkError(outputErrors.data);
             writer.write("Błąd popełniony przez sieć dla wzorca: " + getNeuralNetworkError() + "\n");
             Matrix targetOutputMatrix = Matrix.createFromInput(targetOutput);
             writer.write("Pożądany wzorzec odpowiedzi: " + targetOutputMatrix + "\n");
-            Matrix outputErrors = new Matrix();
-            outputErrors = outputErrors.calculateErrors(Matrix.createFromInput(targetOutput), Matrix.createFromInput(input));
             writer.write("Błędy popełnione na wyjściach sieci: " + outputErrors + "\n");
-            writer.write("Wartości wyjściowe neuronów wyjściowych: " + Matrix.createFromInput(Matrix.doubleToDouble(Matrix.toDoubleArray(output))) + "\n");
+            writer.write("Wartości wyjściowe neuronów wyjściowych: " + output + "\n");
             writer.write("Wagi neuronów wyjściowych: " + Matrix.matrixToString(outputLayerWeights.data) + "\n");
             writer.write("Wartości wyjściowe neuronów ukrytych: " + Matrix.matrixToString(hidden.data) + "\n");
             writer.write("Wagi neuronów ukrytych: " + Matrix.matrixToString(hiddenLayerWeights.data) + "\n\n");
