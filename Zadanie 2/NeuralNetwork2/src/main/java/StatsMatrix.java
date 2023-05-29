@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class StatsMatrix {
+public class StatsMatrix implements Serializable {
     private double TP;
     private double TN;
     private double FP;

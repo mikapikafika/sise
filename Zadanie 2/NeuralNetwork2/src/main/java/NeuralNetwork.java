@@ -1,10 +1,8 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
-public class NeuralNetwork {
-    private final double learningRate;
-    private final double momentum;
+public class NeuralNetwork implements Serializable {
+    private double learningRate = 0.1;
+    private double momentum = 0.0;
     private boolean BiasHidden = true;
     private boolean BiasOutput = true;
     private Matrix hiddenLayerWeights;
@@ -16,6 +14,8 @@ public class NeuralNetwork {
     private int outputNeurons;
     public double neuralNetworkError = 0.0;
 
+    public NeuralNetwork() {
+    }
 
     public NeuralNetwork(double learningRate, double momentum, int inputNeurons, int hiddenNeurons, int outputNeurons) {
         this.learningRate = learningRate;
@@ -206,6 +206,28 @@ public class NeuralNetwork {
 
     public double getNeuralNetworkError() {
         return neuralNetworkError;
+    }
+
+    public void saveToFile(String filePath) {
+        try (FileOutputStream fileOut = new FileOutputStream(filePath);
+             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+            objectOut.writeObject(this);
+            System.out.println("Obiekt został zapisany do pliku.");
+        } catch (IOException e) {
+            System.out.println("Wystąpił błąd podczas zapisu obiektu do pliku: " + e.getMessage());
+        }
+    }
+
+    public static NeuralNetwork readFromFile(String filePath)
+    {
+        NeuralNetwork neuralNetwork = null;
+        try (FileInputStream fileInputStream = new FileInputStream(filePath);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            neuralNetwork = (NeuralNetwork) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return neuralNetwork;
     }
 
 }

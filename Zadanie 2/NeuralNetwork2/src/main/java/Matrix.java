@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Matrix implements Cloneable{
+public class Matrix implements Cloneable, Serializable {
     public int rowNum;
     public int colNum;
     public double[][] data;
@@ -158,15 +159,6 @@ public class Matrix implements Cloneable{
         return c;
     }
 
-//    public static Double[] toDoubleArray(Matrix temp) {
-//        List<Double> array = new ArrayList<>();
-//        for (int i = 0; i < temp.rowNum; i++) {
-//            for (int j = 0; j < temp.colNum; j++) {
-//                array.add(temp.data[i][j]);
-//            }
-//        }
-//        return array.toArray(Double[]::new);
-//    }
 
     public static double[] toDoubleArray(Matrix temp) {
         double[] array = new double[temp.rowNum * temp.colNum];
@@ -260,4 +252,6 @@ public class Matrix implements Cloneable{
         }
         return sb.toString();
     }
+
+
 }
