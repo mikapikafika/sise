@@ -116,7 +116,7 @@ public class NeuralNetworkTrainer {
 
     private void saveErrorToFile(double error, int epoch) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("error_log.txt", true))) {
-            writer.write("Epoch: " + epoch + ", Error: " + error);
+            writer.write("Epoka: " + epoch + ", Błąd: " + error);
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();
