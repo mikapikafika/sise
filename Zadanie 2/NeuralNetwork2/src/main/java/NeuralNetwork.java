@@ -31,8 +31,14 @@ public class NeuralNetwork implements Serializable {
         hiddenLayerWeights.randomizeValues();
     }
 
-    public void train(double[] input, double[] targetOutput)
+    public void train(double[] input, double[] targetOutput, double momentum, boolean isBias)
     {
+        this.momentum = momentum;
+        if(isBias == false)
+        {
+            BiasHidden = false;
+            BiasOutput = false;
+        }
 //        Reprezentuje docelowe wyjście
         Matrix targetOutputMatrix;
         targetOutputMatrix = Matrix.createFromInput(targetOutput);

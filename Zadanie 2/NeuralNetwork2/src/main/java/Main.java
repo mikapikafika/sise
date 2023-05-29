@@ -22,7 +22,8 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
         DataReader dataReader = new DataReader();
-        dataReader.loadTrainingDataFromFile("H:\\GitRepositories\\SISE\\Zadanie 2\\Irysy\\iris.txt",0.8);
+        dataReader.loadTrainingDataFromFile("C:\\Studia\\SISE\\Zadanie 2\\Irysy\\iris.txt",0.8);
+        //dataReader.loadTrainingDataFromFile("H:\\GitRepositories\\SISE\\Zadanie 2\\Irysy\\iris.txt",0.8);
         NeuralNetwork network;
 
         System.out.println("Czy chcesz wczytać sieć z pliku? t/n");
@@ -37,9 +38,7 @@ public class Main {
         NeuralNetworkTrainer trainer = new NeuralNetworkTrainer(network, dataReader);
         switch (args[0]){
             case"train":
-                if(Double.parseDouble(args[2]) != 0.0)
-                    trainer.train(Integer.parseInt(args[1]), true, Boolean.getBoolean(args[3]), Boolean.getBoolean(args[4]));
-                else trainer.train(Integer.parseInt(args[1]), false, Boolean.getBoolean(args[3]), Boolean.getBoolean(args[4]));
+                trainer.train(Integer.parseInt(args[1]), Double.parseDouble(args[2]), Boolean.getBoolean(args[3]), Boolean.getBoolean(args[4]));
                 System.out.println("Czy chcesz zapisać sieć do pliku? t/n");
                 if(Objects.equals(scanner.nextLine(), "t"))
                 {
@@ -48,7 +47,7 @@ public class Main {
                 }
             case "test":
                 trainer.test();
-    //dataReader.loadTrainingDataFromFile("C:\\Studia\\SISE\\Zadanie 2\\Irysy\\iris.txt",0.8);
+
     }
 }
 }

@@ -17,7 +17,7 @@ public class NeuralNetworkTrainer {
         this.reader = reader;
     }
 
-    public void train(int epochs, boolean isMomentum, boolean isBias, boolean isRandom) {
+    public void train(int epochs, double momentum, boolean isBias, boolean isRandom) {
         ArrayList<Double> calculatedNetworkErrors = new ArrayList<>();
         ArrayList<Integer> epochsNum = new ArrayList<>();
         int numTrainingPatterns = reader.getTrainingDataSize();
@@ -33,7 +33,7 @@ public class NeuralNetworkTrainer {
             for (int i = 0; i < numTrainingPatterns; i++) {
                 int patternIndex = patternOrder.get(i);
                 double[][] sample = reader.getTrainingData().get(patternIndex);
-                network.train(sample[0], sample[1]);
+                network.train(sample[0], sample[1], momentum, isBias);
             }
 
             calculatedNetworkErrors.add(network.getNeuralNetworkError() / reader.getTrainingData().size());
