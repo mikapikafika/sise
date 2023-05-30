@@ -66,6 +66,9 @@ public class NeuralNetworkTrainer {
         StatsMatrix species1 = new StatsMatrix(new double[]{1.0, 0.0, 0.0});
         StatsMatrix species2 = new StatsMatrix(new double[]{0.0, 1.0, 0.0});
         StatsMatrix species3 = new StatsMatrix(new double[]{0.0, 0.0, 1.0});
+        species1.confusionMatrix();
+        species2.confusionMatrix();
+        species3.confusionMatrix();
         int tmp1 = 0;
         int tmp2 = 0;
         int tmp3 = 0;
@@ -77,16 +80,49 @@ public class NeuralNetworkTrainer {
 
             // Rezultat testu
             double[] testResult = test;
+            int predictedClass = getMaxIndex(testResult);
+            int actualClass = getMaxIndex(desired.get(i));
 
-            if (Math.abs(testResult[0] - 1.0) < epsilon) {
+            if(predictedClass == actualClass)
+            {
+                if (predictedClass == 0) {
+                    species1.incrementConfusionMatrix(actualClass);
+                } else if (predictedClass == 1) {
+                    species2.incrementConfusionMatrix(actualClass);
+                } else if (predictedClass == 2) {
+                    species3.incrementConfusionMatrix(actualClass);
+                }
+            }
+            else
+            {
+                if (predictedClass == 0) {
+                    species1.incrementBadConfusionMatrix(actualClass,predictedClass);
+                } else if (predictedClass == 1) {
+                    species2.incrementBadConfusionMatrix(actualClass,predictedClass);
+                } else if (predictedClass == 2) {
+                    species3.incrementBadConfusionMatrix(actualClass,predictedClass);
+                }
+            }
+            // Aktualizacja odpowiedniej macierzy pomyłek
+
+//            if (predictedClass == 0) {
+//                species1.incrementConfusionMatrix(actualClass);
+//            } else if (predictedClass == 1) {
+//                species1.incrementConfusionMatrix(actualClass);
+//            } else if (predictedClass == 2) {
+//                species1.incrementConfusionMatrix(actualClass);
+//            }
+
+
+            if (actualClass == predictedClass && predictedClass == 0) {
                 tmp1++;
             }
 
-            if (Math.abs(testResult[1] - 1.0) < epsilon) {
+            if (actualClass == predictedClass && predictedClass == 1) {
                 tmp2++;
             }
 
-            if (Math.abs(testResult[2] - 1.0) < epsilon) {
+            if (actualClass == predictedClass && predictedClass == 2) {
                 tmp3++;
             }
 
@@ -109,6 +145,10 @@ public class NeuralNetworkTrainer {
         species2.displayResults();
         species3.displayResults();
 
+        species1.displayConfusionMatrix();
+        species2.displayConfusionMatrix();
+        species3.displayConfusionMatrix();
+
     }
 
 
@@ -130,6 +170,18 @@ public class NeuralNetworkTrainer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static int getMaxIndex(double[] array) {
+        int maxIndex = 0;
+        double maxValue = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] > maxValue) {
+                maxValue = array[i];
+                maxIndex = i;
+            }
+        }
+        return maxIndex;
     }
 }
 

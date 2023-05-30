@@ -22,6 +22,7 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
         DataReader dataReader = new DataReader();
+
         //dataReader.loadTrainingDataFromFile("C:\\Studia\\SISE\\Zadanie 2\\Irysy\\iris.txt",0.8);
 
         NeuralNetwork network;
@@ -37,14 +38,14 @@ public class Main {
         }
         if(Objects.equals(args[0], "autoencoder"))
         {
-            dataReader.loadAutoEncoderDataFromFile("H:\\GitRepositories\\SISE\\Zadanie 2\\Irysy\\autoencoder.txt");
+            dataReader.loadAutoEncoderDataFromFile("C:\\Studia\\SISE\\Zadanie 2\\Irysy\\autoencoder.txt");
             NeuralNetworkTrainer trainer = new NeuralNetworkTrainer(network, dataReader);
             trainer.train(Integer.parseInt(args[1]), Double.parseDouble(args[2]), Boolean.parseBoolean(args[3]), Boolean.parseBoolean(args[4]));
             trainer.testEncoder();
         }
         else
         {
-            dataReader.loadTrainingDataFromFile("H:\\GitRepositories\\SISE\\Zadanie 2\\Irysy\\iris.txt",0.8);
+            dataReader.loadTrainingDataFromFile("C:\\Studia\\SISE\\Zadanie 2\\Irysy\\iris.txt",0.8);
             NeuralNetworkTrainer trainer = new NeuralNetworkTrainer(network, dataReader);
             switch (args[0]){
                 case"train":
@@ -55,6 +56,7 @@ public class Main {
                         System.out.println("Podaj ścieżkę pliku");
                         network.saveToFile(scanner.nextLine());
                     }
+                    trainer.test();
                     break;
                 case "test":
                     trainer.test();

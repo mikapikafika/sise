@@ -6,6 +6,7 @@ public class StatsMatrix implements Serializable {
     private double TN;
     private double FP;
     private double FN;
+    public int[][] confusionMatrix;
     private double[] species;
     private double correctlyClassified;
 
@@ -68,4 +69,39 @@ public class StatsMatrix implements Serializable {
         sb.append("]");
         return sb.toString();
     }
+
+    public void confusionMatrix() {
+        int numClasses = 3;  // Liczba klas irysów
+
+        // Inicjalizacja macierzy pomyłek
+        confusionMatrix = new int[numClasses][numClasses];
+        for (int i = 0; i < numClasses; i++) {
+            for (int j = 0; j < numClasses; j++) {
+                confusionMatrix[i][j] = 0;
+            }
+        }
+    }
+    public void incrementConfusionMatrix(int actualClass) {
+        // Zwiększ wartość odpowiedniego pola w macierzy pomyłek
+        confusionMatrix[actualClass][actualClass]++;
+    }
+
+    public void incrementBadConfusionMatrix(int actualClass, int predictedClass) {
+        // Zwiększ wartość odpowiedniego pola w macierzy pomyłek
+        confusionMatrix[predictedClass][actualClass]++;
+    }
+
+    public void displayConfusionMatrix() {
+        int numClasses = confusionMatrix.length;
+
+        System.out.println("Confusion Matrix:");
+        for (int i = 0; i < numClasses; i++) {
+            for (int j = 0; j < numClasses; j++) {
+                System.out.print(confusionMatrix[i][j] + "\t");
+            }
+            System.out.println();
+        }
+    }
+
+
 }
