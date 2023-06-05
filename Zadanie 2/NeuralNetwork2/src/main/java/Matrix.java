@@ -120,6 +120,15 @@ public class Matrix implements Cloneable, Serializable {
         return c;
     }
 
+    public void display() {
+        for (int i = 0; i < rowNum; i++) {
+            for (int j = 0; j < colNum; j++) {
+                System.out.print(data[i][j] + " ");
+            }
+            System.out.println('\n');
+        }
+    }
+
     /**
      * Oblicza pochodną funkcji sigmoidalnej dla każdego elementu w macierzy
      * @param output

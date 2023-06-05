@@ -62,7 +62,6 @@ public class NeuralNetworkTrainer {
     }
 
     public void test() {
-        double epsilon = 0.1;
         StatsMatrix species1 = new StatsMatrix(new double[]{1.0, 0.0, 0.0});
         StatsMatrix species2 = new StatsMatrix(new double[]{0.0, 1.0, 0.0});
         StatsMatrix species3 = new StatsMatrix(new double[]{0.0, 0.0, 1.0});
@@ -105,15 +104,6 @@ public class NeuralNetworkTrainer {
             }
             // Aktualizacja odpowiedniej macierzy pomyłek
 
-//            if (predictedClass == 0) {
-//                species1.incrementConfusionMatrix(actualClass);
-//            } else if (predictedClass == 1) {
-//                species1.incrementConfusionMatrix(actualClass);
-//            } else if (predictedClass == 2) {
-//                species1.incrementConfusionMatrix(actualClass);
-//            }
-
-
             if (actualClass == predictedClass && predictedClass == 0) {
                 tmp1++;
             }
@@ -145,9 +135,27 @@ public class NeuralNetworkTrainer {
         species2.displayResults();
         species3.displayResults();
 
-        species1.displayConfusionMatrix();
-        species2.displayConfusionMatrix();
-        species3.displayConfusionMatrix();
+        Matrix finalResult = new Matrix(3, 3);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                finalResult.data[i][j] += species1.confusionMatrix[i][j];
+            }
+        }
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                finalResult.data[i][j] += species2.confusionMatrix[i][j];
+            }
+        }
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                finalResult.data[i][j] += species3.confusionMatrix[i][j];
+            }
+        }
+
+//        species1.displayConfusionMatrix();
+//        species2.displayConfusionMatrix();
+//        species3.displayConfusionMatrix();
+        finalResult.display();
 
     }
 
