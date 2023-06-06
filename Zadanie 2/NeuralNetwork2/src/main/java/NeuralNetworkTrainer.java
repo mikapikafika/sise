@@ -62,15 +62,12 @@ public class NeuralNetworkTrainer {
     }
 
     public void test() {
-        StatsMatrix species1 = new StatsMatrix(new double[]{1.0, 0.0, 0.0});
-        StatsMatrix species2 = new StatsMatrix(new double[]{0.0, 1.0, 0.0});
-        StatsMatrix species3 = new StatsMatrix(new double[]{0.0, 0.0, 1.0});
+        StatsMatrix species1 = new StatsMatrix();
+        StatsMatrix species2 = new StatsMatrix();
+        StatsMatrix species3 = new StatsMatrix();
         species1.confusionMatrix();
         species2.confusionMatrix();
         species3.confusionMatrix();
-        int tmp1 = 0;
-        int tmp2 = 0;
-        int tmp3 = 0;
 
         List<double[]> input = reader.getTestingInput();
         List<double[]> desired = reader.getTestingResult();
@@ -95,45 +92,14 @@ public class NeuralNetworkTrainer {
             else
             {
                 if (predictedClass == 0) {
-                    species1.incrementBadConfusionMatrix(actualClass,predictedClass);
+                    species1.incrementBadConfusionMatrix(predictedClass, actualClass);
                 } else if (predictedClass == 1) {
-                    species2.incrementBadConfusionMatrix(actualClass,predictedClass);
+                    species2.incrementBadConfusionMatrix(predictedClass, actualClass);
                 } else if (predictedClass == 2) {
-                    species3.incrementBadConfusionMatrix(actualClass,predictedClass);
+                    species3.incrementBadConfusionMatrix(predictedClass,actualClass);
                 }
             }
-            // Aktualizacja odpowiedniej macierzy pomyłek
-
-            if (actualClass == predictedClass && predictedClass == 0) {
-                tmp1++;
-            }
-
-            if (actualClass == predictedClass && predictedClass == 1) {
-                tmp2++;
-            }
-
-            if (actualClass == predictedClass && predictedClass == 2) {
-                tmp3++;
-            }
-
-
-//            // To, co powinno być rezultatem testu
-            double[] actualResult = desired.get(i);
-            double[] bigTestResult = new double[]{tmp1, tmp2, tmp3};
-            
-            species1.confusionMatrixValues(bigTestResult, actualResult);
-            species2.confusionMatrixValues(bigTestResult, actualResult);
-            species3.confusionMatrixValues(bigTestResult, actualResult);
-
-            tmp1 = 0;
-            tmp2 = 0;
-            tmp3 = 0;
         }
-
-
-        species1.displayResults();
-        species2.displayResults();
-        species3.displayResults();
 
         Matrix finalResult = new Matrix(3, 3);
         for (int i = 0; i < 3; i++) {
@@ -161,20 +127,62 @@ public class NeuralNetworkTrainer {
             }
         }
         System.out.println("Liczebność: " + tmp);
+        //Total population
+        tmp = 0;
+        for (int i = 0; i < 3; i++) {
+            tmp += (int)finalResult.data[i][i] ;
+        }
+        System.out.println("Łącznie poprawnie sklasyfikowane: " + tmp + "\n");
 
-        System.out.println("[1.0, 0.0, 0.0]");
+        System.out.println("Klasa [1.0, 0.0, 0.0]");
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                species1.confusionMatrix[i][j] = (int)finalResult.data[i][j];
+            }}
+        System.out.println("Poprawnie sklasyfikowane: " + (int)finalResult.data[0][0]);
+        System.out.println("Błędnie sklasyfikowane: " + ((int)finalResult.data[0][1] + (int)finalResult.data[0][2]));
+        double precision1 = species1.calculatePrecision(0);
+        double recall1 = species1.calculateRecall(0);
+        System.out.println("Precision: " + precision1);
+        System.out.println("Recall: " + recall1);
+        double fMeasure1 = species1.calculateFMeasure(0);
+        System.out.println("F-measure: " + fMeasure1);
         species1.calculateTP(0);
         species1.calculateTN(0);
         species1.calculateFN(0);
         species1.calculateFP(0);
 
-        System.out.println("[0.0, 1.0, 0.0]");
+        System.out.println("Klasa [0.0, 1.0, 0.0]");
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                 species2.confusionMatrix[i][j] = (int)finalResult.data[i][j];
+            }}
+        System.out.println("Poprawnie sklasyfikowane: " + (int)finalResult.data[1][1]);
+        System.out.println("Błędnie sklasyfikowane: " + ((int)finalResult.data[1][0] + (int)finalResult.data[1][2]));
+        double precision2 = species2.calculatePrecision(1);
+        double recall2 = species2.calculateRecall(1);
+        System.out.println("Precision: " + precision2);
+        System.out.println("Recall: " + recall2);
+        double fMeasure2 = species2.calculateFMeasure(1);
+        System.out.println("F-measure: " + fMeasure2);
         species2.calculateTP(1);
         species2.calculateTN(1);
         species2.calculateFN(1);
         species2.calculateFP(1);
 
-        System.out.println("[0.0, 0.0, 1.0]");
+        System.out.println("Klasa [0.0, 0.0, 1.0]");
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                species3.confusionMatrix[i][j] = (int)finalResult.data[i][j];
+            }}
+        System.out.println("Poprawnie sklasyfikowane: " + (int)finalResult.data[2][2]);
+        System.out.println("Błędnie sklasyfikowane: " + ((int)finalResult.data[2][0] + (int)finalResult.data[2][1]));
+        double precision3 = species3.calculatePrecision(2);
+        double recall3 = species3.calculateRecall(2);
+        System.out.println("Precision: " + precision3);
+        System.out.println("Recall: " + recall3);
+        double fMeasure3 = species3.calculateFMeasure(2);
+        System.out.println("F-measure: " + fMeasure3);
         species3.calculateTP(2);
         species3.calculateTN(2);
         species3.calculateFN(2);
