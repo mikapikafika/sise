@@ -81,6 +81,42 @@ public class StatsMatrix implements Serializable {
             }
         }
     }
+
+    public void calculateTP(int state) {
+        int tp = confusionMatrix[state][state];
+        System.out.println("TP: " + tp);
+    }
+    public void calculateTN(int state) {
+        int tn = 0;
+        for (int i = 0; i < confusionMatrix.length; i++) {
+            for (int j = 0; j < confusionMatrix.length; j++) {
+                if (i != state && j != state) {
+                    tn += confusionMatrix[i][j];
+                }
+            }
+        }
+        System.out.println("TN: " + tn);
+    }
+
+    public void calculateFP(int state) {
+        int fp = 0;
+        for (int i = 0; i < confusionMatrix.length; i++) {
+            if (i != state) {
+                fp += confusionMatrix[i][state];
+            }
+        }
+        System.out.println("FP: " + fp);
+    }
+
+    public void calculateFN(int state) {
+        int fn = 0;
+        for (int i = 0; i < confusionMatrix.length; i++) {
+            if (i != state) {
+                fn += confusionMatrix[state][i];
+            }
+        }
+        System.out.println("FN: " + fn);
+    }
     public void incrementConfusionMatrix(int actualClass) {
         // Zwiększ wartość odpowiedniego pola w macierzy pomyłek
         confusionMatrix[actualClass][actualClass]++;

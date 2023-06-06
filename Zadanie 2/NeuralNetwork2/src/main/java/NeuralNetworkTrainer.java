@@ -151,12 +151,34 @@ public class NeuralNetworkTrainer {
                 finalResult.data[i][j] += species3.confusionMatrix[i][j];
             }
         }
-
-//        species1.displayConfusionMatrix();
-//        species2.displayConfusionMatrix();
-//        species3.displayConfusionMatrix();
         finalResult.display();
 
+        //Total population
+        int tmp = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                tmp += (int)finalResult.data[i][j] ;
+            }
+        }
+        System.out.println("Liczebność: " + tmp);
+
+        System.out.println("[1.0, 0.0, 0.0]");
+        species1.calculateTP(0);
+        species1.calculateTN(0);
+        species1.calculateFN(0);
+        species1.calculateFP(0);
+
+        System.out.println("[0.0, 1.0, 0.0]");
+        species2.calculateTP(1);
+        species2.calculateTN(1);
+        species2.calculateFN(1);
+        species2.calculateFP(1);
+
+        System.out.println("[0.0, 0.0, 1.0]");
+        species3.calculateTP(2);
+        species3.calculateTN(2);
+        species3.calculateFN(2);
+        species3.calculateFP(2);
     }
 
 
