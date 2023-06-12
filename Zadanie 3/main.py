@@ -18,9 +18,14 @@ plt.figure()
 # fit() dopasowuje model do danych treningowych, ucząc go,
 # jak przewidywać etykiety klas na podstawie dostarczonych cech
 clf = DecisionTreeClassifier().fit(X_train, y_train)
-# plot_tree(clf, filled=True)
-# plt.title("Drzewo decyzyjne trenowane na zbiorze irysów")
-# plt.show()
+dot_data = export_graphviz(clf, out_file=None,
+                           feature_names=iris.feature_names,
+                           class_names=iris.target_names,
+                           filled=True, rounded=True,
+                           special_characters=True)
+graph = graphviz.Source(dot_data)
+graph.render("iris")
+graph.view()
 
 # Macierz pomyłek w formie terminalowej...
 predicted_labels = clf.predict(X_test)
@@ -42,10 +47,3 @@ print("\nRaport klasyfikacji:")
 print(class_report)
 # support = ile próbek należy do danej klasy w zbiorze testowym
 
-dot_data = export_graphviz(clf, out_file=None,
-                           feature_names=iris.feature_names,
-                           class_names=iris.target_names,
-                           filled=True, rounded=True,
-                           special_characters=True)
-graph = graphviz.Source(dot_data)
-graph.render("iris")
